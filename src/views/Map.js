@@ -2,10 +2,11 @@ import {
   MapContainer,
   Marker,
   TileLayer,
-  useMapEvent,
+  useMapEvent, ZoomControl,
 } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
+import StationMarker from '../components/StationMarker';
 
 delete L.Icon.Default.prototype._getIconUrl;
 
@@ -29,14 +30,15 @@ const MapEvents = ({moveEndedAction}) => {
 
 const Map = ({moveEndedAction, stations, width = "100vw", height = "100vh", center = position}) => {
   return (
-      <MapContainer style={{width, height}} center={center} zoom={13}>
+      <MapContainer style={{width, height}} center={center} zoom={13} minZoom={11} zoomControl={false}>
         <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
+        <ZoomControl position="bottomright" />
         <MapEvents moveEndedAction={moveEndedAction}/>
         {stations && stations.map(s => {
-          return <Marker key={s.id} position={[s.geometry.coordinates[1], s.geometry.coordinates[0]]}></Marker>
+          return <StationMarker  key={s.id} station={s} />
         })}
       </MapContainer>
   );
