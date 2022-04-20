@@ -1,7 +1,6 @@
 import {
   MapContainer,
   Marker,
-  Popup,
   TileLayer,
   useMapEvent,
 } from 'react-leaflet';
@@ -18,26 +17,27 @@ L.Icon.Default.mergeOptions({
 
 const position = [60.1689856, 24.9358008];
 
-const MoveEnded = ({moveEndedAction}) => {
+const MapEvents = ({moveEndedAction}) => {
   const map = useMapEvent('moveend', () => {
-    moveEndedAction(map.getBounds())
+    if(moveEndedAction) {
+      console.log("moveEnded")
+      moveEndedAction(map.getBounds())
+    }
   })
   return null
 }
 
-const Map = ({moveEndedAction, width = "100vw", height = "100vh", center = position}) => {
+const Map = ({moveEndedAction, stations, width = "100vw", height = "100vh", center = position}) => {
   return (
       <MapContainer style={{width, height}} center={center} zoom={13}>
         <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        <MoveEnded moveEndedAction={moveEndedAction}/>
-        <Marker position={position}>
-          <Popup>
-            A pretty CSS3 popup. <br/> Easily customizable.
-          </Popup>
-        </Marker>
+        <MapEvents moveEndedAction={moveEndedAction}/>
+        {stations && stations.map(s => {
+          return <Marker key={s.id} position={[s.geometry.coordinates[1], s.geometry.coordinates[0]]}></Marker>
+        })}
       </MapContainer>
   );
 };
