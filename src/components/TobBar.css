@@ -1,0 +1,18 @@
+.top-bar a {
+    text-decoration: none;
+    color: white;
+    padding: 10px;
+    height: 48px;
+    font-weight: bold;
+}
+
+.top-bar a:hover {
+    background-color: #b3cde0;
+    color: black;
+}
+
+.top-bar {
+    background-color: #005b96;
+    display: flex;
+    flex-wrap: wrap;
+}

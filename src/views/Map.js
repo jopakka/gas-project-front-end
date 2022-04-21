@@ -1,10 +1,11 @@
-import {MapContainer, Marker, TileLayer, ZoomControl} from 'react-leaflet';
+import {MapContainer, TileLayer, ZoomControl} from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useLazyQuery} from '@apollo/client';
 import {stationsByBounds} from '../utils/queries';
 import StationMarker from '../components/StationMarker';
+import './Map.css';
 
 delete L.Icon.Default.prototype._getIconUrl;
 
@@ -49,27 +50,25 @@ const DisplayStations = ({map}) => {
   const displayStations = useMemo(() => (
       <>
         {stations.map(s => (
-            <StationMarker key={s.id} station={s} />
+            <StationMarker key={s.id} station={s}/>
         ))}
       </>
   ), [stations]);
 
   return (
-      <div>
+      <>
         {displayStations}
-      </div>
+      </>
   );
 };
 
 const Map = ({
-               width = '100vw',
-               height = '100vh',
                center = position,
                showAllStation = false,
              }) => {
   const [map, setMap] = useState(null);
   return (
-      <MapContainer style={{width, height}} center={center}
+      <MapContainer center={center}
                     zoom={13}
                     minZoom={11}
                     ref={setMap}
@@ -79,8 +78,7 @@ const Map = ({
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         <ZoomControl position="bottomright"/>
-        {map && showAllStation ?
-            <DisplayStations map={map}/> : null}
+        {map && showAllStation ? <DisplayStations map={map}/> : null}
       </MapContainer>
   );
 };

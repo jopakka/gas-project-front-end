@@ -1,10 +1,12 @@
 import './App.css';
-import Map from './views/Map';
+import Home from './views/Home';
 
 const App = () => {
   return (
       <div className="App">
-        <Map showAllStation />
+        <div style={{flexGrow: 1, height: '100%', display: 'flex'}}>
+          <Home/>
+        </div>
       </div>
   );
 };
