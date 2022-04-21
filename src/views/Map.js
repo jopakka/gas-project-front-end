@@ -4,6 +4,7 @@ import L from 'leaflet';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useLazyQuery} from '@apollo/client';
 import {stationsByBounds} from '../utils/queries';
+import StationMarker from '../components/StationMarker';
 
 delete L.Icon.Default.prototype._getIconUrl;
 
@@ -48,9 +49,7 @@ const DisplayStations = ({map}) => {
   const displayStations = useMemo(() => (
       <>
         {stations.map(s => (
-            <Marker key={s.id} position={[
-              s.geometry.coordinates[1],
-              s.geometry.coordinates[0]]}></Marker>
+            <StationMarker key={s.id} station={s} />
         ))}
       </>
   ), [stations]);
