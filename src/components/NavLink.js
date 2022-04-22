@@ -1,6 +1,6 @@
 const NavLink = ({link}) => {
   return (
-      <a href="">{link}</a>
+      <button onClick={link.action}>{link.title}</button>
   )
 };
 

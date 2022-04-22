@@ -1,17 +1,14 @@
 import NavLink from './NavLink';
 import './TobBar.css';
-import {indexOf} from 'leaflet/src/core/Util';
 
-const links = [
-  'Home',
-  'Favorites',
-];
-
-const TopBar = () => {
+const TopBar = ({links, profileLinks}) => {
   return (
-      <div className='top-bar'>
-        {links.map(l => <NavLink key={indexOf(links, l)} link={l}/>)}
-      </div>
+      <header className="top-bar">
+        <div>{links.map(l => <NavLink key={l.title} link={l}/>)}</div>
+        <div>{profileLinks.map(l =>
+            <NavLink key={l.title} link={l}/>)}
+        </div>
+      </header>
   );
 };
 

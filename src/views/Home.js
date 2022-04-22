@@ -1,10 +1,8 @@
 import Map from './Map';
-import TopBar from '../components/TopBar';
 
 const Home = () => {
   return (
-      <div style={{flex: 1}}>
-        <TopBar/>
+      <div>
         <Map showAllStation/>
       </div>
   );

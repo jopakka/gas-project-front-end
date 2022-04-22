@@ -1,0 +1,51 @@
+.login-register {
+    text-align: start;
+    font-size: 1.2em;
+}
+
+.login-register p {
+    font-size: 0.8em;
+    color: #005b96;
+}
+
+.login-register p:hover {
+    cursor: pointer;
+}
+
+.login-register input {
+    font-size: 1em;
+    padding: 0.5em;
+}
+
+.login-register input {
+    display: block;
+    width: 100%;
+    min-height: 48px;
+}
+
+.cancel {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 48px;
+    width: 48px;
+    background-color: #ffffff;
+}
+
+.cancel:hover {
+    cursor: pointer;
+    background-color: #999999;
+}
+
+.cancel:after {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    content: "\274c"; /* use the hex value here... */
+    font-size: 24px;
+    color: red;
+    line-height: 48px;
+    text-align: center;
+}

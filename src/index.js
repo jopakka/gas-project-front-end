@@ -5,19 +5,22 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import {ApolloClient, ApolloProvider, InMemoryCache} from '@apollo/client';
 import {apiUrl} from './utils/variables';
+import {MainProvider} from './context/MainContext';
 
 const client = new ApolloClient({
   uri: apiUrl,
-  cache: new InMemoryCache()
-})
+  cache: new InMemoryCache(),
+});
 
 ReactDOM.render(
     <React.StrictMode>
       <ApolloProvider client={client}>
-        <App />
+        <MainProvider>
+          <App/>
+        </MainProvider>
       </ApolloProvider>
     </React.StrictMode>,
-    document.getElementById('root')
+    document.getElementById('root'),
 );
 
 // If you want to start measuring performance in your app, pass a function
