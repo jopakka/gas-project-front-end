@@ -1,14 +1,16 @@
 import {useMutation} from '@apollo/client';
 import {register} from '../utils/queries';
-import {useContext, useEffect} from 'react';
+import {useContext} from 'react';
 import {MainContext} from '../context/MainContext';
 
-const RegisterForm = ({toLogin}) => {
+const RegisterForm = ({toLogin, setVisible}) => {
   const {setUser, setIsLoggedIn} = useContext(MainContext);
   const [doRegister] = useMutation(register, {
     onCompleted: (d) => {
+      if (!d.registerUser) return;
       setUser(d.registerUser);
-      setIsLoggedIn(true)
+      setIsLoggedIn(true);
+      setVisible(false);
     },
   });
 

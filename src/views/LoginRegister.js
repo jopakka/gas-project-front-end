@@ -1,9 +1,8 @@
 import Modal from 'react-modal';
-import {useContext, useEffect, useState} from 'react';
+import {useState} from 'react';
 import './LoginRegister.css';
 import LoginForm from '../components/LoginForm';
 import RegisterForm from '../components/RegisterForm';
-import {MainContext} from '../context/MainContext';
 
 const modalStyles = {
   overlay: {
@@ -22,19 +21,13 @@ const modalStyles = {
   },
 };
 
-const LoginRegister = ({visible, setVisible}) => {
-  const {isLoggedIn} = useContext(MainContext);
+const LoginRegister = ({setVisible}) => {
   const [loginMode, setLoginMode] = useState(true);
 
-  useEffect(() => {
-    setVisible(!isLoggedIn)
-    setLogin(isLoggedIn)
-  }, [isLoggedIn, setVisible]);
-  
   const closeForm = () => {
-    setVisible(false)
-    setLogin(true)
-  }
+    setVisible(false);
+    setLogin(true);
+  };
 
   const setLogin = (value) => {
     setLoginMode(value);
@@ -43,12 +36,14 @@ const LoginRegister = ({visible, setVisible}) => {
   };
 
   return (
-      <Modal ariaHideApp={false} style={modalStyles} isOpen={visible}
+      <Modal ariaHideApp={false} style={modalStyles} isOpen={true}
              parentSelector={() => document.querySelector('.App')}>
         <div className="cancel" onClick={closeForm}></div>
         {loginMode ?
-            <LoginForm toRegister={() => setLogin(false)}/> :
-            <RegisterForm toLogin={() => setLogin(true)}/>
+            <LoginForm toRegister={() => setLogin(false)}
+                       setVisible={setVisible}/> :
+            <RegisterForm toLogin={() => setLogin(true)}
+                          setVisible={setVisible}/>
         }
       </Modal>
   );
