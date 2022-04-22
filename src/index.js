@@ -4,11 +4,11 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import {ApolloClient, ApolloProvider, InMemoryCache} from '@apollo/client';
-import {apiUrl} from './utils/variables';
+import {graphqlUrl} from './utils/variables';
 import {MainProvider} from './context/MainContext';
 
 const client = new ApolloClient({
-  uri: apiUrl,
+  uri: graphqlUrl,
   cache: new InMemoryCache(),
 });
 

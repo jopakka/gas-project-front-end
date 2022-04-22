@@ -4,14 +4,18 @@ import TopBar from './components/TopBar';
 import {useContext, useEffect, useState} from 'react';
 import LoginRegister from './views/LoginRegister';
 import {MainContext} from './context/MainContext';
+import io from 'socket.io-client';
+import {apiUrl} from './utils/variables';
 
 const App = () => {
   const {user, setUser, isLoggedIn, setIsLoggedIn} = useContext(MainContext);
   const [loginVisible, setLoginVisible] = useState(false);
+  const [socket, setSocket] = useState(null);
 
   useEffect(() => {
-
-  }, [user])
+    const newSocket = io(apiUrl)
+    setSocket(newSocket)
+  }, [setSocket])
 
   const links = [
     {

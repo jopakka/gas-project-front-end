@@ -1,3 +1,4 @@
-const apiUrl = 'https://192.168.1.11:8000/graphql'
+const apiUrl = 'https://192.168.1.11:8000'
+const graphqlUrl = `${apiUrl}/graphql`
 
-export {apiUrl}
+export {apiUrl, graphqlUrl}
