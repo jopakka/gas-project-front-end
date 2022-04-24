@@ -8,6 +8,8 @@ const RegisterForm = ({toLogin, setVisible}) => {
   const [doRegister] = useMutation(register, {
     onCompleted: (d) => {
       if (!d.registerUser) return;
+      localStorage.setItem('token', d.registerUser.token);
+      localStorage.setItem('username', d.registerUser.username);
       setUser(d.registerUser);
       setIsLoggedIn(true);
       setVisible(false);

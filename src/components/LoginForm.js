@@ -8,6 +8,8 @@ const LoginForm = ({toRegister, setVisible}) => {
   const [doLogin] = useLazyQuery(login, {
     onCompleted: (d) => {
       if (!d.login) return;
+      localStorage.setItem('token', d.login.token);
+      localStorage.setItem('username', d.login.username);
       setUser(d.login);
       setIsLoggedIn(true);
       setVisible(false);

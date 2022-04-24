@@ -13,9 +13,9 @@ const App = () => {
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
-    const newSocket = io(apiUrl)
-    setSocket(newSocket)
-  }, [setSocket])
+    const newSocket = io(apiUrl);
+    setSocket(newSocket);
+  }, [setSocket]);
 
   const links = [
     {
@@ -45,6 +45,7 @@ const App = () => {
       action: () => {
         console.log('Logout');
         if (window.confirm('Do you want to log out?')) {
+          localStorage.clear();
           setUser(undefined);
           setIsLoggedIn(false);
         }

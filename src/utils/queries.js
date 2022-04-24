@@ -11,6 +11,48 @@ query StationsByBounds($bounds: Bounds!) {
     }
     prices {
       fuel95 {
+        stationID
+        price
+        updatedAt
+      }
+      fuel98 {
+        stationID
+        price
+        updatedAt
+      }
+      fuelDiesel {
+        stationID
+        price
+        updatedAt
+      }
+    }
+    geometry {
+        coordinates
+    }
+  }
+}
+`;
+
+const stationInfo = gql`
+query Station($stationId: String!) {
+  station(id: $stationId) {
+    id
+    properties {
+      brand
+      name
+      operator
+    }
+    address {
+      city
+      country
+      house_number
+      postcode
+    }
+    geometry {
+      coordinates
+    }
+    prices {
+      fuel95 {
         price
         updatedAt
       }
@@ -23,15 +65,12 @@ query StationsByBounds($bounds: Bounds!) {
         updatedAt
       }
     }
-    geometry {
-        coordinates
-    }
   }
 }
 `;
 
 const login = gql`
-  query Login($username: String!, $password: String!) {
+query Login($username: String!, $password: String!) {
   login(username: $username, password: $password) {
     id
     username
@@ -41,7 +80,7 @@ const login = gql`
 `;
 
 const register = gql`
-  mutation RegisterUser($username: String!, $password: String!, $confirmPassword: String!) {
+mutation RegisterUser($username: String!, $password: String!, $confirmPassword: String!) {
   registerUser(username: $username, password: $password, confirmPassword: $confirmPassword) {
     id
     username
@@ -50,8 +89,35 @@ const register = gql`
 }
 `;
 
+const addFavorite = gql`
+mutation AddFavorite($stationId: String!) {
+  addFavorite(stationID: $stationId) {
+    userID
+    stationID
+  }
+}
+`;
+
+const deleteFavorite = gql`
+mutation DeleteFavorite($stationId: String!) {
+  deleteFavorite(stationID: $stationId) 
+}
+`;
+
+const checkFavorite = gql`
+query Favorite($stationId: String!) {
+  favorite(stationID: $stationId) {
+    stationID
+  }
+}
+`;
+
 export {
   stationsByBounds,
   login,
-  register
+  register,
+  stationInfo,
+  addFavorite,
+  deleteFavorite,
+  checkFavorite,
 };

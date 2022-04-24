@@ -10,6 +10,9 @@ import {MainProvider} from './context/MainContext';
 const client = new ApolloClient({
   uri: graphqlUrl,
   cache: new InMemoryCache(),
+  headers: {
+    authorization: `Bearer ${localStorage.getItem('token')}`,
+  }
 });
 
 ReactDOM.render(

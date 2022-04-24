@@ -1,0 +1,8 @@
+.station-popup table {
+    border-collapse: separate;
+    border-spacing: 20px 5px;
+}
+
+.station-popup .favorite-star {
+    font-size: 48px;
+}
