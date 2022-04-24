@@ -8,13 +8,12 @@ import io from 'socket.io-client';
 import {apiUrl} from './utils/variables';
 
 const App = () => {
-  const {user, setUser, isLoggedIn, setIsLoggedIn} = useContext(MainContext);
+  const {user, setUser, isLoggedIn, setIsLoggedIn, setSocket} = useContext(MainContext);
   const [loginVisible, setLoginVisible] = useState(false);
-  const [socket, setSocket] = useState(null);
 
   useEffect(() => {
     const newSocket = io(apiUrl);
-    setSocket(newSocket);
+    if(newSocket) setSocket(newSocket);
   }, [setSocket]);
 
   const links = [

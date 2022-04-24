@@ -6,9 +6,14 @@ import {MdStarBorder, MdStar} from 'react-icons/md';
 import {useMutation, useQuery} from '@apollo/client';
 import {addFavorite, checkFavorite, deleteFavorite} from '../utils/queries';
 
-const StationPopup = ({station}) => {
-  const {user} = useContext(MainContext);
+const StationPopup = ({station, isOpen}) => {
+  const {user, socket} = useContext(MainContext);
+  const {data} = useQuery(checkFavorite, {variables: {stationId: station.id}});
   const [favorite, setFavorite] = useState(false);
+  const [price95, setPrice95] = useState(undefined);
+  const [price98, setPrice98] = useState(undefined);
+  const [priceDiesel, setPriceDiesel] = useState(undefined);
+
   const [doAddFavorite] = useMutation(addFavorite, {
     onCompleted: (d) => {
       if (!d.addFavorite) return;
@@ -21,20 +26,47 @@ const StationPopup = ({station}) => {
       setFavorite(false);
     },
   });
-  const {data} = useQuery(checkFavorite, {variables: {stationId: station.id}});
 
   useEffect(() => {
-    console.log('data', data && data.favorite);
     if (data && data.favorite) setFavorite(true);
   }, [data]);
 
+  useEffect(() => {
+    setPrice95(station.prices.fuel95);
+    setPrice98(station.prices.fuel98);
+    setPriceDiesel(station.prices.fuelDiesel);
+  }, [station]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const listener95 = (args) => {
+      setPrice95(args);
+    };
+    const listener98 = (args) => {
+      setPrice98(args);
+    };
+    const listenerDiesel = (args) => {
+      setPriceDiesel(args);
+    };
+
+    const channel95 = `price ${station.id} 95`;
+    const channel98 = `price ${station.id} 98`;
+    const channelDiesel = `price ${station.id} diesel`;
+    socket.on(channel95, listener95);
+    socket.on(channel98, listener98);
+    socket.on(channelDiesel, listenerDiesel);
+    return () => {
+      socket.off(channel95, listener95);
+      socket.off(channel98, listener98);
+      socket.off(channelDiesel, listenerDiesel);
+    };
+  }, [isOpen, socket, station]);
+
   const favoriteAction = async () => {
-    console.log('favorite clicked');
     await doAddFavorite({variables: {stationId: station.id}});
   };
 
   const unFavoriteAction = async () => {
-    console.log('unfavorite clicked');
     await doDeleteFavorite({variables: {stationId: station.id}});
   };
 
@@ -53,20 +85,20 @@ const StationPopup = ({station}) => {
         <tbody>
         <tr>
           <th>95</th>
-          <th>{station.prices.fuel95 ?
-              station.prices.fuel95.price :
+          <th>{price95 ?
+              price95.price :
               'no price'}</th>
         </tr>
         <tr>
           <th>98</th>
-          <th>{station.prices.fuel98 ?
-              station.prices.fuel98.price :
+          <th>{price98 ?
+              price98.price :
               'no price'}</th>
         </tr>
         <tr>
           <th>Diesel</th>
-          <th>{station.prices.fuelDiesel ?
-              station.prices.fuelDiesel.price :
+          <th>{priceDiesel ?
+              priceDiesel.price :
               'no price'}</th>
         </tr>
         </tbody>

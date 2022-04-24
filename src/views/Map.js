@@ -27,11 +27,13 @@ const mapBounds = (b) => {
 };
 
 const DisplayStations = ({map}) => {
-  const [getStations, {data}] = useLazyQuery(stationsByBounds);
+  const [getStations, {data}] = useLazyQuery(stationsByBounds, {fetchPolicy: "network-only"});
   const [stations, setStations] = useState([]);
 
-  const moveEnd = useCallback(async () => {
-    await getStations({variables: {bounds: mapBounds(map.getBounds())}});
+  const moveEnd = useCallback(() => {
+    (async () => {
+      await getStations({variables: {bounds: mapBounds(map.getBounds())}});
+    })();
   }, [getStations, map]);
 
   useEffect(moveEnd, [moveEnd, map]);
