@@ -2,14 +2,15 @@ import {useMutation} from '@apollo/client';
 import {register} from '../utils/queries';
 import {useContext} from 'react';
 import {MainContext} from '../context/MainContext';
+import Cookies from 'js-cookie';
 
 const RegisterForm = ({toLogin, setVisible}) => {
   const {setUser, setIsLoggedIn} = useContext(MainContext);
   const [doRegister] = useMutation(register, {
     onCompleted: (d) => {
       if (!d.registerUser) return;
-      localStorage.setItem('token', d.registerUser.token);
-      localStorage.setItem('username', d.registerUser.username);
+      Cookies.set('token', d.registerUser.token, { sameSite: 'strict' });
+      Cookies.set('username', d.registerUser.username, { sameSite: 'strict' });
       setUser(d.registerUser);
       setIsLoggedIn(true);
       setVisible(false);
@@ -18,7 +19,6 @@ const RegisterForm = ({toLogin, setVisible}) => {
 
   const registerAction = async (e) => {
     e.preventDefault();
-    console.log('register');
     const elements = e.target.elements;
     const username = elements.username.value;
     const password = elements.password.value;

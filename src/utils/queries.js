@@ -112,6 +112,33 @@ query Favorite($stationId: String!) {
 }
 `;
 
+const favorites = gql`
+query Favorite {
+  favorites {
+    id
+    properties {
+      brand
+      name
+      operator
+    }
+    prices {
+      fuel95 {
+        price
+        updatedAt
+      }
+      fuel98 {
+        price
+        updatedAt
+      }
+      fuelDiesel {
+        price
+        updatedAt
+      }
+    }
+  }
+}
+`;
+
 export {
   stationsByBounds,
   login,
@@ -120,4 +147,5 @@ export {
   addFavorite,
   deleteFavorite,
   checkFavorite,
+  favorites,
 };

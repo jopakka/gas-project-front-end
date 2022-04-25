@@ -2,14 +2,15 @@ import {useLazyQuery} from '@apollo/client';
 import {login} from '../utils/queries';
 import {useContext} from 'react';
 import {MainContext} from '../context/MainContext';
+import Cookies from 'js-cookie'
 
 const LoginForm = ({toRegister, setVisible}) => {
   const {setUser, setIsLoggedIn} = useContext(MainContext);
   const [doLogin] = useLazyQuery(login, {
     onCompleted: (d) => {
       if (!d.login) return;
-      localStorage.setItem('token', d.login.token);
-      localStorage.setItem('username', d.login.username);
+      Cookies.set('token', d.login.token, { sameSite: 'strict' });
+      Cookies.set('username', d.login.username, { sameSite: 'strict' });
       setUser(d.login);
       setIsLoggedIn(true);
       setVisible(false);

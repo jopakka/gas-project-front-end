@@ -6,26 +6,18 @@ import LoginRegister from './views/LoginRegister';
 import {MainContext} from './context/MainContext';
 import io from 'socket.io-client';
 import {apiUrl} from './utils/variables';
+import Favorites from './views/Favorites';
+import Cookies from 'js-cookie';
 
 const App = () => {
   const {user, setUser, isLoggedIn, setIsLoggedIn, setSocket} = useContext(MainContext);
   const [loginVisible, setLoginVisible] = useState(false);
+  const [openView, setOpenView] = useState('home');
 
   useEffect(() => {
     const newSocket = io(apiUrl);
     if(newSocket) setSocket(newSocket);
   }, [setSocket]);
-
-  const links = [
-    {
-      title: 'Home',
-      action: () => console.log('Home'),
-    },
-    {
-      title: 'Favorites',
-      action: () => console.log('Favorites'),
-    },
-  ];
 
   const loginLinks = [
     {
@@ -40,11 +32,16 @@ const App = () => {
       action: () => console.log('Clicked user'),
     },
     {
+      title: openView === 'home' ? 'Favorites' : 'Map',
+      action: () => setOpenView(openView === 'home' ? 'favorites' : 'home'),
+    },
+    {
       title: 'Logout',
       action: () => {
         console.log('Logout');
         if (window.confirm('Do you want to log out?')) {
-          localStorage.clear();
+          Cookies.remove('token');
+          Cookies.remove('username');
           setUser(undefined);
           setIsLoggedIn(false);
         }
@@ -57,9 +54,11 @@ const App = () => {
         {loginVisible && <LoginRegister setVisible={setLoginVisible}/>}
         <div style={{flexGrow: 1, height: '100%', display: 'flex'}}>
           <div style={{flex: 1}}>
-            <TopBar links={links}
-                    profileLinks={!isLoggedIn ? loginLinks : loggedInLinks}/>
-            <Home/>
+            <TopBar profileLinks={!isLoggedIn ? loginLinks : loggedInLinks}/>
+            {openView === 'favorites' ?
+                <Favorites /> :
+                <Home/>
+            }
           </div>
         </div>
       </div>

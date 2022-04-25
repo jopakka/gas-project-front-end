@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
@@ -7,12 +6,13 @@ import {ApolloClient, ApolloProvider, InMemoryCache} from '@apollo/client';
 import {graphqlUrl} from './utils/variables';
 import {MainProvider} from './context/MainContext';
 import {createRoot} from 'react-dom/client';
+import Cookies from 'js-cookie';
 
 const client = new ApolloClient({
   uri: graphqlUrl,
   cache: new InMemoryCache(),
   headers: {
-    authorization: `Bearer ${localStorage.getItem('token')}`,
+    authorization: `Bearer ${Cookies.get('token')}`,
   },
 });
 
@@ -27,17 +27,6 @@ root.render(
       </ApolloProvider>
     </React.StrictMode>,
 );
-
-// ReactDOM.render(
-//     <React.StrictMode>
-//       <ApolloProvider client={client}>
-//         <MainProvider>
-//           <App/>
-//         </MainProvider>
-//       </ApolloProvider>
-//     </React.StrictMode>,
-//     document.getElementById('root'),
-// );
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

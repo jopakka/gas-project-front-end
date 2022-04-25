@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react';
+import Cookies from 'js-cookie';
 
 const MainContext = React.createContext({});
 
@@ -8,8 +9,8 @@ const MainProvider = ({children}) => {
   const [socket, setSocket] = useState(undefined);
 
   useEffect(() => {
-    const u = localStorage.getItem('username');
-    const token = localStorage.getItem('token');
+    const u = Cookies.get('username');
+    const token = Cookies.get('token');
     if (u) {
       setUser({username: u, token});
       setIsLoggedIn(true);
