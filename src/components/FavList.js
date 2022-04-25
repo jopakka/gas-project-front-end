@@ -6,6 +6,7 @@ import {deleteFavorite} from '../utils/queries';
 
 const FavList = ({item, refetch}) => {
   const [doDeleteFavorite] = useMutation(deleteFavorite, {
+    fetchPolicy: 'network-only',
     variables: {
       stationId: item.stationID,
     },

@@ -8,7 +8,8 @@ import {addFavorite, checkFavorite, deleteFavorite} from '../utils/queries';
 
 const StationPopup = ({station, isOpen}) => {
   const {user, socket} = useContext(MainContext);
-  const [doCheckFavorite, {data}] = useLazyQuery(checkFavorite, {variables: {stationId: station.id}});
+  const [doCheckFavorite, {data}] = useLazyQuery(checkFavorite,
+      {fetchPolicy: 'network-only', variables: {stationId: station.id}});
   const [favorite, setFavorite] = useState(false);
   const [price95, setPrice95] = useState(undefined);
   const [price98, setPrice98] = useState(undefined);
@@ -16,26 +17,26 @@ const StationPopup = ({station, isOpen}) => {
 
   const [doAddFavorite] = useMutation(addFavorite, {
     onCompleted: (d) => {
-      console.log("add", d)
+      console.log('add', d);
       if (!d.addFavorite) return;
       setFavorite(true);
     },
   });
   const [doDeleteFavorite] = useMutation(deleteFavorite, {
     onCompleted: (d) => {
-      console.log("delete", d)
+      console.log('delete', d);
       if (!d.deleteFavorite) return;
       setFavorite(false);
     },
   });
-  
+
   useEffect(() => {
     (async () => {
-      if(isOpen) {
-        await doCheckFavorite()
+      if (isOpen) {
+        await doCheckFavorite();
       }
-    })()
-  }, [doCheckFavorite, isOpen])
+    })();
+  }, [doCheckFavorite, isOpen]);
 
   useEffect(() => {
     if (data && data.favorite) setFavorite(true);
