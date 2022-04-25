@@ -44,6 +44,7 @@ const App = () => {
           Cookies.remove('username');
           setUser(undefined);
           setIsLoggedIn(false);
+          setOpenView('home')
         }
       },
     },

@@ -46,3 +46,7 @@
     line-height: 48px;
     text-align: center;
 }
+
+.login-register p.error {
+    color: red;
+}
