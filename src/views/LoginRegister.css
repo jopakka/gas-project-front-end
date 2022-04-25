@@ -13,12 +13,9 @@
 }
 
 .login-register input {
+    display: block;
     font-size: 1em;
     padding: 0.5em;
-}
-
-.login-register input {
-    display: block;
     width: 100%;
     min-height: 48px;
 }

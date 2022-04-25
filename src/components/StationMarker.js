@@ -12,7 +12,7 @@ const StationMarker = ({station}) => {
             station.geometry.coordinates[0]]}
           eventHandlers={{
             click: (e) => {
-              console.log('marker clicked', station.id);
+              console.log('marker clicked', station.stationID);
             },
             popupopen: () => setIsOpen(true),
             popupclose: () => setIsOpen(false),

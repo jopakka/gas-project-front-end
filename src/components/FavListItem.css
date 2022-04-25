@@ -1,0 +1,17 @@
+.fav-list-item {
+    flex: 1 1 0;
+}
+
+.fav-list-item p:first-of-type {
+    font-weight: bold;
+}
+
+.fav-list-item .edit {
+    color: blue;
+    font-size: 1.2em;
+}
+
+.fav-list-item .edit:hover {
+    background-color: #999999;
+    cursor: pointer;
+}

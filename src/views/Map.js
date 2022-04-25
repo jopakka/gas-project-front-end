@@ -6,6 +6,7 @@ import {useLazyQuery} from '@apollo/client';
 import {stationsByBounds} from '../utils/queries';
 import StationMarker from '../components/StationMarker';
 import './Map.css';
+import {indexOf} from 'leaflet/src/core/Util';
 
 delete L.Icon.Default.prototype._getIconUrl;
 
@@ -52,7 +53,7 @@ const DisplayStations = ({map}) => {
   const displayStations = useMemo(() => (
       <>
         {stations.map(s => (
-            <StationMarker key={s.id} station={s}/>
+            <StationMarker key={indexOf(stations, s)} station={s}/>
         ))}
       </>
   ), [stations]);

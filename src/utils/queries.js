@@ -115,7 +115,7 @@ query Favorite($stationId: String!) {
 const favorites = gql`
 query Favorite {
   favorites {
-    id
+    stationID
     properties {
       brand
       name
@@ -139,6 +139,30 @@ query Favorite {
 }
 `;
 
+const update95 = gql`
+mutation Mutation($stationId: String!, $price: String!) {
+  update95(stationID: $stationId, price: $price) {
+    price
+  }
+}
+`;
+
+const update98 = gql`
+mutation Mutation($stationId: String!, $price: String!) {
+  update98(stationID: $stationId, price: $price) {
+    price
+  }
+}
+`;
+
+const updateDiesel = gql`
+mutation Mutation($stationId: String!, $price: String!) {
+  updateDiesel(stationID: $stationId, price: $price) {
+    price
+  }
+}
+`;
+
 export {
   stationsByBounds,
   login,
@@ -148,4 +172,7 @@ export {
   deleteFavorite,
   checkFavorite,
   favorites,
+  update95,
+  update98,
+  updateDiesel,
 };

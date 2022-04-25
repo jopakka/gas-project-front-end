@@ -2,13 +2,13 @@ import {Popup} from 'react-leaflet';
 import './StationPopup.css';
 import {useContext, useEffect, useState} from 'react';
 import {MainContext} from '../context/MainContext';
-import {MdStarBorder, MdStar} from 'react-icons/md';
-import {useMutation, useQuery} from '@apollo/client';
+import {MdStar, MdStarBorder} from 'react-icons/md';
+import {useLazyQuery, useMutation} from '@apollo/client';
 import {addFavorite, checkFavorite, deleteFavorite} from '../utils/queries';
 
 const StationPopup = ({station, isOpen}) => {
   const {user, socket} = useContext(MainContext);
-  const {data} = useQuery(checkFavorite, {variables: {stationId: station.id}});
+  const [doCheckFavorite, {data}] = useLazyQuery(checkFavorite, {variables: {stationId: station.id}});
   const [favorite, setFavorite] = useState(false);
   const [price95, setPrice95] = useState(undefined);
   const [price98, setPrice98] = useState(undefined);
@@ -16,16 +16,26 @@ const StationPopup = ({station, isOpen}) => {
 
   const [doAddFavorite] = useMutation(addFavorite, {
     onCompleted: (d) => {
+      console.log("add", d)
       if (!d.addFavorite) return;
       setFavorite(true);
     },
   });
   const [doDeleteFavorite] = useMutation(deleteFavorite, {
     onCompleted: (d) => {
+      console.log("delete", d)
       if (!d.deleteFavorite) return;
       setFavorite(false);
     },
   });
+  
+  useEffect(() => {
+    (async () => {
+      if(isOpen) {
+        await doCheckFavorite()
+      }
+    })()
+  }, [doCheckFavorite, isOpen])
 
   useEffect(() => {
     if (data && data.favorite) setFavorite(true);
