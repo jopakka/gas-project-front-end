@@ -2,18 +2,34 @@ import React from 'react';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import {ApolloClient, ApolloProvider, InMemoryCache} from '@apollo/client';
+import {
+  ApolloClient,
+  ApolloProvider,
+  createHttpLink,
+  InMemoryCache,
+} from '@apollo/client';
 import {graphqlUrl} from './utils/variables';
 import {MainProvider} from './context/MainContext';
 import {createRoot} from 'react-dom/client';
-import Cookies from 'js-cookie';
+import {setContext} from '@apollo/client/link/context';
+
+const httpLink = createHttpLink({
+  uri: graphqlUrl,
+});
+
+const authLink = setContext((_, {headers}) => {
+  const token = localStorage.getItem('token');
+  return {
+    headers: {
+      ...headers,
+      authorization: token ? `Bearer ${token}` : '',
+    },
+  };
+});
 
 const client = new ApolloClient({
-  uri: graphqlUrl,
+  link: authLink.concat(httpLink),
   cache: new InMemoryCache(),
-  headers: {
-    authorization: `Bearer ${Cookies.get('token')}`,
-  },
 });
 
 const container = document.getElementById('root');

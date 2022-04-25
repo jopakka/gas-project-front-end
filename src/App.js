@@ -7,16 +7,16 @@ import {MainContext} from './context/MainContext';
 import io from 'socket.io-client';
 import {apiUrl} from './utils/variables';
 import Favorites from './views/Favorites';
-import Cookies from 'js-cookie';
 
 const App = () => {
-  const {user, setUser, isLoggedIn, setIsLoggedIn, setSocket} = useContext(MainContext);
+  const {user, setUser, isLoggedIn, setIsLoggedIn, setSocket} = useContext(
+      MainContext);
   const [loginVisible, setLoginVisible] = useState(false);
   const [openView, setOpenView] = useState('home');
 
   useEffect(() => {
     const newSocket = io(apiUrl);
-    if(newSocket) setSocket(newSocket);
+    if (newSocket) setSocket(newSocket);
   }, [setSocket]);
 
   const loginLinks = [
@@ -40,11 +40,10 @@ const App = () => {
       action: () => {
         console.log('Logout');
         if (window.confirm('Do you want to log out?')) {
-          Cookies.remove('token');
-          Cookies.remove('username');
+          localStorage.clear();
           setUser(undefined);
           setIsLoggedIn(false);
-          setOpenView('home')
+          setOpenView('home');
         }
       },
     },
@@ -57,7 +56,7 @@ const App = () => {
           <div style={{flex: 1}}>
             <TopBar profileLinks={!isLoggedIn ? loginLinks : loggedInLinks}/>
             {openView === 'favorites' ?
-                <Favorites /> :
+                <Favorites/> :
                 <Home/>
             }
           </div>

@@ -1,19 +1,17 @@
 import {useMutation} from '@apollo/client';
 import {register} from '../utils/queries';
-import {useContext} from 'react';
+import {useContext, useState} from 'react';
 import {MainContext} from '../context/MainContext';
-import Cookies from 'js-cookie';
-import {useState} from 'react';
 
 const RegisterForm = ({toLogin, setVisible}) => {
   const {setUser, setIsLoggedIn} = useContext(MainContext);
-  const [error, setError] = useState(undefined)
+  const [error, setError] = useState(undefined);
   const [doRegister] = useMutation(register, {
     fetchPolicy: 'network-only',
     onCompleted: (d) => {
       if (d.registerUser) {
-        Cookies.set('token', d.registerUser.token, { sameSite: 'strict' });
-        Cookies.set('username', d.registerUser.username, { sameSite: 'strict' });
+        localStorage.setItem('token', d.registerUser.token);
+        localStorage.setItem('username', d.registerUser.username);
         setUser(d.registerUser);
         setIsLoggedIn(true);
         setVisible(false);
@@ -31,8 +29,8 @@ const RegisterForm = ({toLogin, setVisible}) => {
       await doRegister({variables: {username, password, confirmPassword}});
     } catch (e) {
       console.error('register', e.graphQLErrors);
-      if(e.graphQLErrors) {
-        setError(e.graphQLErrors[0].message)
+      if (e.graphQLErrors) {
+        setError(e.graphQLErrors[0].message);
       }
     }
   };

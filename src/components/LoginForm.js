@@ -2,25 +2,24 @@ import {useLazyQuery} from '@apollo/client';
 import {login} from '../utils/queries';
 import {useContext, useState} from 'react';
 import {MainContext} from '../context/MainContext';
-import Cookies from 'js-cookie'
 
 const LoginForm = ({toRegister, setVisible}) => {
   const {setUser, setIsLoggedIn} = useContext(MainContext);
-  const [error, setError] = useState(undefined)
+  const [error, setError] = useState(undefined);
   const [doLogin] = useLazyQuery(login, {
     fetchPolicy: 'network-only',
     onCompleted: (d) => {
       if (d.login) {
-        Cookies.set('token', d.login.token, { sameSite: 'strict' });
-        Cookies.set('username', d.login.username, { sameSite: 'strict' });
+        localStorage.setItem('token', d.login.token);
+        localStorage.setItem('username', d.login.username);
         setUser(d.login);
         setIsLoggedIn(true);
         setVisible(false);
       }
     },
     onError: (d) => {
-      setError(d.message)
-    }
+      setError(d.message);
+    },
   });
 
   const loginAction = async (e) => {

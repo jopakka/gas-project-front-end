@@ -5,30 +5,48 @@ import {update95, update98, updateDiesel} from '../utils/queries';
 
 const FavListItem = ({stationId, title, value, refetch, className = ''}) => {
   const [doUpdate95] = useMutation(update95, {
+    fetchPolicy: 'network-only',
     onCompleted: (d) => {
       console.log(d);
-      if(!d.update95) return;
+      if (!d.update95) return;
+    },
+    onError: () => {
+      alert('Error while updating price');
     },
   });
   const [doUpdate98] = useMutation(update98, {
+    fetchPolicy: 'network-only',
     onCompleted: (d) => {
       console.log(d);
-      if(!d.update98) return;
+      if (!d.update98) return;
+    },
+    onError: () => {
+      alert('Error while updating price');
     },
   });
   const [doUpdateDiesel] = useMutation(updateDiesel, {
+    fetchPolicy: 'network-only',
     onCompleted: (d) => {
       console.log(d);
-      if(!d.updateDiesel) return;
+      if (!d.updateDiesel) return;
+    },
+    onError: () => {
+      alert('Error while updating price');
     },
   });
 
   const askUpdate = async () => {
-    const newValue = window.prompt(`Enter new ${title} price`,
+    let newValue = window.prompt(`Enter new ${title} price`,
         value === 'no price' ? '' : value);
     if (value === newValue) return;
+    if (isNaN(newValue)) return window.alert('Not a valid value');
 
-    const options = {variables: {stationId, price: newValue}};
+    const options = {
+      variables: {
+        stationId,
+        price: newValue,
+      },
+    };
     switch (title) {
       case '95':
         await doUpdate95(options);
