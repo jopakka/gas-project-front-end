@@ -7,6 +7,7 @@ import {stationsByBounds} from '../utils/queries';
 import StationMarker from '../components/StationMarker';
 import './Map.css';
 import {indexOf} from 'leaflet/src/core/Util';
+import LoadingIndicator from '../components/LoadingIndicator';
 
 delete L.Icon.Default.prototype._getIconUrl;
 
@@ -28,16 +29,37 @@ const mapBounds = (b) => {
 };
 
 const DisplayStations = ({map}) => {
-  const [getStations, {data}] = useLazyQuery(stationsByBounds, {fetchPolicy: "network-only"});
+  const [getStations, {data}] = useLazyQuery(stationsByBounds, {
+    fetchPolicy: 'network-only',
+    onCompleted: () => {
+      console.log('oncomplete');
+      setLoading(false);
+    },
+    onError: () => {
+      console.log('onerror');
+      setLoading(false);
+    },
+  });
   const [stations, setStations] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const moveEnd = useCallback(() => {
     (async () => {
-      await getStations({variables: {bounds: mapBounds(map.getBounds())}});
+      try {
+        setLoading(true);
+        await getStations({variables: {bounds: mapBounds(map.getBounds())}});
+      } catch (e) {
+        setLoading(false)
+        console.log('moveEnd', e);
+      }
     })();
   }, [getStations, map]);
 
   useEffect(moveEnd, [moveEnd, map]);
+
+  useEffect(() => {
+    console.log("loading", loading)
+  }, [loading])
 
   useEffect(() => {
     map.on('moveend', moveEnd);
@@ -60,6 +82,7 @@ const DisplayStations = ({map}) => {
 
   return (
       <>
+        {loading && <LoadingIndicator/>}
         {displayStations}
       </>
   );
