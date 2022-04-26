@@ -1,9 +1,9 @@
 import {Marker} from 'react-leaflet';
-import StationPopup from './StationPopup';
-import {useState} from 'react';
+import {useContext} from 'react';
+import {MainContext} from '../context/MainContext';
 
 const StationMarker = ({station}) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const {setInfoVisible, setInfoItem} = useContext(MainContext)
 
   return (
       <Marker
@@ -12,14 +12,11 @@ const StationMarker = ({station}) => {
             station.geometry.coordinates[0]]}
           eventHandlers={{
             click: () => {
-              console.log('marker clicked', station.id);
+              setInfoItem(station)
+              setInfoVisible(true)
             },
-            popupopen: () => setIsOpen(true),
-            popupclose: () => setIsOpen(false),
           }}
-      >
-        <StationPopup station={station} isOpen={isOpen}/>
-      </Marker>
+      ></Marker>
   );
 };
 

@@ -3,33 +3,21 @@ import {MdMode} from 'react-icons/md';
 import {useMutation} from '@apollo/client';
 import {update95, update98, updateDiesel} from '../utils/queries';
 
-const FavListItem = ({stationId, title, value, refetch, className = ''}) => {
+const FavListItem = ({stationId, title, value, updatedAt = '', className = ''}) => {
   const [doUpdate95] = useMutation(update95, {
     fetchPolicy: 'network-only',
-    onCompleted: (d) => {
-      console.log(d);
-      if (!d.update95) return;
-    },
     onError: () => {
       alert('Error while updating price');
     },
   });
   const [doUpdate98] = useMutation(update98, {
     fetchPolicy: 'network-only',
-    onCompleted: (d) => {
-      console.log(d);
-      if (!d.update98) return;
-    },
     onError: () => {
       alert('Error while updating price');
     },
   });
   const [doUpdateDiesel] = useMutation(updateDiesel, {
     fetchPolicy: 'network-only',
-    onCompleted: (d) => {
-      console.log(d);
-      if (!d.updateDiesel) return;
-    },
     onError: () => {
       alert('Error while updating price');
     },
@@ -38,7 +26,7 @@ const FavListItem = ({stationId, title, value, refetch, className = ''}) => {
   const askUpdate = async () => {
     let newValue = window.prompt(`Enter new ${title} price`,
         value === 'no price' ? '' : value);
-    if (value === newValue) return;
+    if (!newValue || value === newValue) return;
     if (isNaN(newValue)) return window.alert('Not a valid value');
 
     const options = {
@@ -66,6 +54,7 @@ const FavListItem = ({stationId, title, value, refetch, className = ''}) => {
       <div className={'fav-list-item ' + className}>
         <p>{title}</p>
         <p>{value}</p>
+        {title !== 'Name' && updatedAt && <p style={{fontSize: '0.8em'}}>Updated at:<br/>{updatedAt}</p>}
         {title !== 'Name' && <MdMode onClick={askUpdate} className="edit"/>}
       </div>
   );

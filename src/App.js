@@ -7,9 +7,10 @@ import {MainContext} from './context/MainContext';
 import io from 'socket.io-client';
 import {apiUrl} from './utils/variables';
 import Favorites from './views/Favorites';
+import InfoPage from './views/InfoPage';
 
 const App = () => {
-  const {user, setUser, isLoggedIn, setIsLoggedIn, setSocket} = useContext(
+  const {user, setUser, isLoggedIn, setIsLoggedIn, setSocket, infoVisible, setInfoVisible, infoItem} = useContext(
       MainContext);
   const [loginVisible, setLoginVisible] = useState(false);
   const [openView, setOpenView] = useState('home');
@@ -52,12 +53,13 @@ const App = () => {
   return (
       <div className="App">
         {loginVisible && <LoginRegister setVisible={setLoginVisible}/>}
+        {infoVisible && <InfoPage item={infoItem} isOpen={infoVisible} setVisible={setInfoVisible}/>}
         <div style={{flexGrow: 1, height: '100%', display: 'flex'}}>
           <div style={{flex: 1}}>
             <TopBar profileLinks={!isLoggedIn ? loginLinks : loggedInLinks}/>
             {openView === 'favorites' ?
-                <Favorites/> :
-                <Home/>
+                <Favorites setInfoVisible={setInfoVisible}/> :
+                <Home setInfoVisible={setInfoVisible}/>
             }
           </div>
         </div>

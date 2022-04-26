@@ -6,6 +6,8 @@ const MainProvider = ({children}) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(undefined);
   const [socket, setSocket] = useState(undefined);
+  const [infoVisible, setInfoVisible] = useState(false);
+  const [infoItem, setInfoItem] = useState(undefined);
 
   useEffect(() => {
     const u = localStorage.getItem('username');
@@ -25,6 +27,10 @@ const MainProvider = ({children}) => {
             setUser,
             socket,
             setSocket,
+            infoVisible,
+            setInfoVisible,
+            infoItem,
+            setInfoItem,
           }}
       >
         {children}

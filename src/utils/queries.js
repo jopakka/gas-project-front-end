@@ -44,6 +44,7 @@ query Station($stationId: String!) {
     }
     address {
       city
+      road
       country
       house_number
       postcode

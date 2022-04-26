@@ -33,7 +33,7 @@ const Favorites = () => {
             favs.length > 0 ?
                 favs.map(f => <FavList key={f.stationID} item={f} refetch={doRefetch}/>) :
                 <p>No favorites</p>
-        }s
+        }
       </>
   );
 };

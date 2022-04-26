@@ -4,12 +4,26 @@ import {useContext, useEffect, useState} from 'react';
 import {MainContext} from '../context/MainContext';
 import {MdStar, MdStarBorder} from 'react-icons/md';
 import {useLazyQuery, useMutation} from '@apollo/client';
-import {addFavorite, checkFavorite, deleteFavorite} from '../utils/queries';
+import {
+  addFavorite,
+  checkFavorite,
+  deleteFavorite,
+  stationInfo,
+} from '../utils/queries';
 
 const StationPopup = ({station, isOpen}) => {
   const {user, socket} = useContext(MainContext);
   const [doCheckFavorite, {data}] = useLazyQuery(checkFavorite,
       {fetchPolicy: 'network-only', variables: {stationId: station.id}});
+  const [doStationInfo] = useLazyQuery(stationInfo, {
+    fetchPolicy: 'network-only',
+    variables: {stationId: station.id},
+    onCompleted: (d) => {
+      setPrice95(d.station.prices.fuel95);
+      setPrice98(d.station.prices.fuel98);
+      setPriceDiesel(d.station.prices.fuelDiesel);
+    }
+  });
   const [favorite, setFavorite] = useState(false);
   const [price95, setPrice95] = useState(undefined);
   const [price98, setPrice98] = useState(undefined);
@@ -34,9 +48,10 @@ const StationPopup = ({station, isOpen}) => {
     (async () => {
       if (isOpen) {
         await doCheckFavorite();
+        await doStationInfo();
       }
     })();
-  }, [doCheckFavorite, isOpen]);
+  }, [doCheckFavorite, doStationInfo, isOpen]);
 
   useEffect(() => {
     if (data && data.favorite) setFavorite(true);
@@ -51,12 +66,15 @@ const StationPopup = ({station, isOpen}) => {
   useEffect(() => {
     if (!isOpen) return;
     const listener95 = (args) => {
+      station.prices.fuel95.price = args
       setPrice95(args);
     };
     const listener98 = (args) => {
+      station.prices.fuel98.price = args
       setPrice98(args);
     };
     const listenerDiesel = (args) => {
+      station.prices.fuelDiesel.price = args
       setPriceDiesel(args);
     };
 
