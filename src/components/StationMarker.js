@@ -3,7 +3,7 @@ import StationPopup from './StationPopup';
 import {useState} from 'react';
 
 const StationMarker = ({station}) => {
-  const [isOpen, setIsOpen] = useState();
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
       <Marker
@@ -11,8 +11,8 @@ const StationMarker = ({station}) => {
             station.geometry.coordinates[1],
             station.geometry.coordinates[0]]}
           eventHandlers={{
-            click: (e) => {
-              console.log('marker clicked', station.stationID);
+            click: () => {
+              console.log('marker clicked', station.id);
             },
             popupopen: () => setIsOpen(true),
             popupclose: () => setIsOpen(false),

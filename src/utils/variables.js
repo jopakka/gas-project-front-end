@@ -1,4 +1,5 @@
-const apiUrl = 'https://192.168.1.11:8000'
-const graphqlUrl = `${apiUrl}/graphql`
+const apiUrl = 'https://192.168.1.11:8000';
+// const apiUrl = 'https://joonaun-project.azurewebsites.net';
+const graphqlUrl = `${apiUrl}/graphql`;
 
-export {apiUrl, graphqlUrl}
+export {apiUrl, graphqlUrl};
