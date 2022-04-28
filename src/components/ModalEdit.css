@@ -1,0 +1,12 @@
+.edit-form {
+    text-align: start;
+    font-size: 1.2em;
+}
+
+.edit-form input {
+    display: block;
+    font-size: 1em;
+    padding: 0.5em;
+    width: 100%;
+    min-height: 48px;
+}

@@ -24,7 +24,8 @@ const FavList = ({item, refetch}) => {
   const [price98, setPrice98] = useState(undefined);
   const [priceDiesel, setPriceDiesel] = useState(undefined);
 
-  const askDelete = async () => {
+  const askDelete = async (e) => {
+    e.stopPropagation();
     console.log(item);
     if (window.confirm('Do you want to delete this station from favorites?')) {
       await doDeleteFavorite();
@@ -32,8 +33,8 @@ const FavList = ({item, refetch}) => {
   };
 
   const formatTime = (timestamp) => {
-    if(isNaN(timestamp)) {
-      timestamp = DateTime.fromISO(timestamp)
+    if (isNaN(timestamp)) {
+      timestamp = DateTime.fromISO(timestamp);
     }
     return DateTime.fromMillis(Number(timestamp))
         .setLocale('en-GB')
@@ -48,15 +49,15 @@ const FavList = ({item, refetch}) => {
 
   useEffect(() => {
     const listener95 = (args) => {
-      item.prices.fuel95.price = args
+      if(item.prices.fuel95) item.prices.fuel95.price = args;
       setPrice95(args);
     };
     const listener98 = (args) => {
-      item.prices.fuel98.price = args
+      if(item.prices.fuel98) item.prices.fuel98.price = args;
       setPrice98(args);
     };
     const listenerDiesel = (args) => {
-      item.prices.fuelDiesel.price = args
+      if(item.prices.fuelDiesel) item.prices.fuelDiesel.price = args;
       setPriceDiesel(args);
     };
 
@@ -74,29 +75,23 @@ const FavList = ({item, refetch}) => {
   }, [item, socket]);
 
   const doShowInfo = () => {
-    setInfoItem(item)
-    setInfoVisible(true)
-  }
+    setInfoItem(item);
+    setInfoVisible(true);
+  };
 
   return (
       <div className="fav-list" onClick={doShowInfo}>
         <FavListItem title="Name" value={item.properties.name ?? 'no name'}/>
-        <FavListItem stationId={item.stationID} updatedAt={price95 &&
+        <FavListItem updatedAt={price95 &&
             formatTime(price95.updatedAt)} title="95"
-                     value={price95 ?
-                         price95.price :
-                         'no price'}/>
-        <FavListItem stationId={item.stationID} updatedAt={price98 &&
+                     value={price95 ? price95.price : 'no price'}/>
+        <FavListItem updatedAt={price98 &&
             formatTime(price98.updatedAt)} title="98"
-                     value={price98 ?
-                         price98.price :
-                         'no price'}/>
-        <FavListItem stationId={item.stationID}
-                     updatedAt={priceDiesel &&
-                         formatTime(priceDiesel.updatedAt)}
-                     title="Diesel" value={priceDiesel ?
-            priceDiesel.price :
-            'no price'}/>
+                     value={price98 ? price98.price : 'no price'}/>
+        <FavListItem
+            updatedAt={priceDiesel && formatTime(priceDiesel.updatedAt)}
+            title="Diesel"
+            value={priceDiesel ? priceDiesel.price : 'no price'}/>
         <MdDelete className="icon delete" onClick={askDelete}/>
       </div>
   );

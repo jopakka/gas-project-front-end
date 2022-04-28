@@ -12,7 +12,7 @@ const MainProvider = ({children}) => {
   useEffect(() => {
     const u = localStorage.getItem('username');
     const token = localStorage.getItem('token');
-    if (u) {
+    if (u && token) {
       setUser({username: u, token});
       setIsLoggedIn(true);
     }
