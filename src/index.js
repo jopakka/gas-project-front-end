@@ -12,6 +12,7 @@ import {graphqlUrl} from './utils/variables';
 import {MainProvider} from './context/MainContext';
 import {createRoot} from 'react-dom/client';
 import {setContext} from '@apollo/client/link/context';
+import {BrowserRouter} from 'react-router-dom';
 
 const httpLink = createHttpLink({
   uri: graphqlUrl,
@@ -38,7 +39,9 @@ root.render(
     <React.StrictMode>
       <ApolloProvider client={client}>
         <MainProvider>
-          <App/>
+          <BrowserRouter>
+            <App/>
+          </BrowserRouter>
         </MainProvider>
       </ApolloProvider>
     </React.StrictMode>,

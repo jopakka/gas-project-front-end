@@ -1,6 +1,10 @@
+import {Link} from 'react-router-dom';
+
 const NavLink = ({link}) => {
   return (
-      <button onClick={link.action}>{link.title}</button>
+      <Link onClick={link.action ? link.action : () => {}} className="link" to={link.path}>
+        <button>{link.title}</button>
+      </Link>
   )
 };
 

@@ -1,19 +1,29 @@
 import './App.css';
-import Home from './views/Home';
 import TopBar from './components/TopBar';
 import {useContext, useEffect, useState} from 'react';
-import LoginRegister from './views/LoginRegister';
 import {MainContext} from './context/MainContext';
 import io from 'socket.io-client';
 import {apiUrl} from './utils/variables';
 import Favorites from './views/Favorites';
+import {Route, Routes} from 'react-router-dom';
+import Home from './views/Home';
+import LoginRegister from './views/LoginRegister';
 import InfoPage from './views/InfoPage';
+import ModalInfo from './components/ModalInfo';
 
 const App = () => {
-  const {user, setUser, isLoggedIn, setIsLoggedIn, setSocket, infoVisible, setInfoVisible, infoItem} = useContext(
+  const {
+    user,
+    setUser,
+    isLoggedIn,
+    setIsLoggedIn,
+    setSocket,
+    infoVisible,
+    setInfoVisible,
+    infoItem,
+  } = useContext(
       MainContext);
   const [loginVisible, setLoginVisible] = useState(false);
-  const [openView, setOpenView] = useState('home');
 
   useEffect(() => {
     const newSocket = io(apiUrl);
@@ -23,28 +33,32 @@ const App = () => {
   const loginLinks = [
     {
       title: 'Login/register',
-      action: () => setLoginVisible(!loginVisible),
+      path: '/',
     },
   ];
 
   const loggedInLinks = [
     {
       title: user && user.username,
-      action: () => console.log('Clicked user'),
+      path: '/profile',
     },
     {
-      title: openView === 'home' ? 'Favorites' : 'Map',
-      action: () => setOpenView(openView === 'home' ? 'favorites' : 'home'),
+      title: 'Favorites',
+      path: '/favorites',
+    },
+    {
+      title: 'Map',
+      path: '/',
     },
     {
       title: 'Logout',
+      path: '/',
       action: () => {
         console.log('Logout');
         if (window.confirm('Do you want to log out?')) {
           localStorage.clear();
           setUser(undefined);
           setIsLoggedIn(false);
-          setOpenView('home');
         }
       },
     },
@@ -53,14 +67,16 @@ const App = () => {
   return (
       <div className="App">
         {loginVisible && <LoginRegister setVisible={setLoginVisible}/>}
-        {infoVisible && <InfoPage item={infoItem} isOpen={infoVisible} setVisible={setInfoVisible}/>}
+        {infoVisible && <InfoPage item={infoItem} isOpen={infoVisible}
+                                  setVisible={setInfoVisible}/>}
         <div style={{flexGrow: 1, height: '100%', display: 'flex'}}>
           <div style={{flex: 1}}>
             <TopBar profileLinks={!isLoggedIn ? loginLinks : loggedInLinks}/>
-            {openView === 'favorites' ?
-                <Favorites setInfoVisible={setInfoVisible}/> :
-                <Home setInfoVisible={setInfoVisible}/>
-            }
+            <Routes>
+              <Route exact path="/" element={<Home/>}/>
+              <Route path="/favorites" element={<Favorites/>}/>
+              <Route path="/station/:type/:id" element={<ModalInfo />}/>
+            </Routes>
           </div>
         </div>
       </div>
