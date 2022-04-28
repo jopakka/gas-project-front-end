@@ -164,22 +164,17 @@ mutation Mutation($stationId: String!, $price: String!) {
 }
 `;
 
-const userHistory = gql`
-query UserHistory($userId: ID) {
+const userInfo = gql`
+query User($userId: ID) {
+  user(id: $userId) {
+    username
+  }
   userHistory(userID: $userId) {
     userID
     stationID
     price
     type
     updatedAt
-  }
-}
-`;
-
-const userInfo = gql`
-query User($userId: ID) {
-  user(id: $userId) {
-    username
   }
 }
 `;
@@ -196,6 +191,5 @@ export {
   update95,
   update98,
   updateDiesel,
-  userHistory,
   userInfo,
 };

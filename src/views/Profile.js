@@ -1,28 +1,36 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {useQuery} from '@apollo/client';
-import {userHistory, userInfo} from '../utils/queries';
+import {userInfo} from '../utils/queries';
+import LoadingIndicator from '../components/LoadingIndicator';
+import HistoryItem from '../components/HistoryItem';
+import {indexOf} from 'leaflet/src/core/Util';
 
 const Profile = () => {
-  const [history, setHistory] = useState(undefined);
-  const [userData, setUserData] = useState(undefined);
-
-  useQuery(userHistory, {
-    onCompleted: (d) => {
-      if(d.userHistory) setHistory(d.userHistory)
-    }
-  });
+  const [loading, setLoading] = useState(true);
+  const [userData, setUserData] = useState({user: {}, history: []});
 
   useQuery(userInfo, {
     onCompleted: (d) => {
-      if(d.user) setUserData(d.user)
-    }
-  })
+      const newData = {};
+      if (d.userHistory) newData.history = d.userHistory;
+      if (d.user) newData.user = d.user;
+      setUserData(newData);
+      setLoading(false);
+    },
+    onError: () => setLoading(false),
+  });
+
+  useEffect(() => {
+    console.log('userData', userData);
+  }, [userData]);
 
   return (
       <>
-        {userData && <>
-          <h1>Hello {userData.username}</h1>
-        </>}
+        {loading && <LoadingIndicator/>}
+        <h1>Hello {userData.user.username}</h1>
+        <h2>History</h2>
+        {userData.history.length > 0 ? userData.history.map(
+            h => <HistoryItem key={indexOf(userData.history, h)} item={h}/>) : <p>No items</p>}
       </>
   );
 };
