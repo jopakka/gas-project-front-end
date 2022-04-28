@@ -5,11 +5,13 @@ import {MainContext} from './context/MainContext';
 import io from 'socket.io-client';
 import {apiUrl} from './utils/variables';
 import Favorites from './views/Favorites';
-import {Route, Routes} from 'react-router-dom';
+import {Route, Routes, Navigate, useLocation} from 'react-router-dom';
 import Home from './views/Home';
 import LoginRegister from './views/LoginRegister';
 import InfoPage from './views/InfoPage';
 import ModalInfo from './components/ModalInfo';
+import Profile from './views/Profile';
+import PrivateRoute from './components/PrivateRoute';
 
 const App = () => {
   const {
@@ -24,6 +26,11 @@ const App = () => {
   } = useContext(
       MainContext);
   const [loginVisible, setLoginVisible] = useState(false);
+  const location = useLocation();
+  const [path, setPath] = useState("/")
+  useEffect(() => {
+    setPath(location.pathname)
+  }, [location])
 
   useEffect(() => {
     const newSocket = io(apiUrl);
@@ -34,6 +41,7 @@ const App = () => {
     {
       title: 'Login/register',
       path: '/',
+      action: () => setLoginVisible(true)
     },
   ];
 
@@ -52,9 +60,8 @@ const App = () => {
     },
     {
       title: 'Logout',
-      path: '/',
+      path,
       action: () => {
-        console.log('Logout');
         if (window.confirm('Do you want to log out?')) {
           localStorage.clear();
           setUser(undefined);
@@ -74,8 +81,9 @@ const App = () => {
             <TopBar profileLinks={!isLoggedIn ? loginLinks : loggedInLinks}/>
             <Routes>
               <Route exact path="/" element={<Home/>}/>
-              <Route path="/favorites" element={<Favorites/>}/>
-              <Route path="/station/:type/:id" element={<ModalInfo />}/>
+              <Route path="/favorites" element={<PrivateRoute element={<Favorites/>}/> }/>
+              <Route path="/profile" element={<PrivateRoute element={<Profile/>}/> }/>
+              <Route path="*" element={<Navigate to="/" />}/>
             </Routes>
           </div>
         </div>
