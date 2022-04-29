@@ -28,7 +28,7 @@ const modalStyles = {
 };
 
 const InfoPage = ({setVisible, item, isOpen}) => {
-  const {setRefresh, socket} = useContext(MainContext);
+  const {setRefresh, socket, updateInfo, setUpdateInfo} = useContext(MainContext);
   const location = useLocation();
   const [info, setInfo] = useState(undefined);
   const [loading, setLoading] = useState(false);
@@ -98,7 +98,8 @@ const InfoPage = ({setVisible, item, isOpen}) => {
     if (!isOpen) return;
     setLoading(true);
     getInfo();
-  }, [getInfo, isOpen]);
+    setUpdateInfo(false);
+  }, [getInfo, isOpen, setUpdateInfo, updateInfo]);
 
   useEffect(() => {
     const listener95 = (args) => {

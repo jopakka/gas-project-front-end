@@ -8,7 +8,7 @@ import {
   createHttpLink,
   InMemoryCache,
 } from '@apollo/client';
-import {graphqlUrl} from './utils/variables';
+import {basename, graphqlUrl} from './utils/variables';
 import {MainProvider} from './context/MainContext';
 import {createRoot} from 'react-dom/client';
 import {setContext} from '@apollo/client/link/context';
@@ -39,7 +39,7 @@ root.render(
     <React.StrictMode>
       <ApolloProvider client={client}>
         <MainProvider>
-          <BrowserRouter>
+          <BrowserRouter basename={basename}>
             <App/>
           </BrowserRouter>
         </MainProvider>

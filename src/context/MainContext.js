@@ -9,6 +9,7 @@ const MainProvider = ({children}) => {
   const [infoVisible, setInfoVisible] = useState(false);
   const [infoItem, setInfoItem] = useState(undefined);
   const [refresh, setRefresh] = useState(false);
+  const [updateInfo, setUpdateInfo] = useState(false);
 
   useEffect(() => {
     const u = localStorage.getItem('username');
@@ -28,6 +29,7 @@ const MainProvider = ({children}) => {
             infoVisible, setInfoVisible,
             infoItem, setInfoItem,
             refresh, setRefresh,
+            updateInfo, setUpdateInfo,
           }}
       >
         {children}

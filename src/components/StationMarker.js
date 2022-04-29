@@ -3,7 +3,7 @@ import {useContext} from 'react';
 import {MainContext} from '../context/MainContext';
 
 const StationMarker = ({station}) => {
-  const {setInfoVisible, setInfoItem} = useContext(MainContext)
+  const {setInfoVisible, setInfoItem} = useContext(MainContext);
 
   return (
       <Marker
@@ -12,8 +12,8 @@ const StationMarker = ({station}) => {
             station.geometry.coordinates[0]]}
           eventHandlers={{
             click: () => {
-              setInfoItem(station)
-              setInfoVisible(true)
+              setInfoItem(station);
+              setInfoVisible(true);
             },
           }}
       ></Marker>

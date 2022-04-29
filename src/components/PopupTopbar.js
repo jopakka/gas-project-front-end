@@ -41,7 +41,8 @@ const PopupTopbar = ({
 
   return (
       <div className={user ? 'popup-topbar' : 'popup-topbar end'}>
-        {user && <button onClick={() => setEditOpen(!editIsOpen)}><MdMode/></button>}
+        {user &&
+            <button onClick={() => setEditOpen(!editIsOpen)}><MdMode/></button>}
         {user && <button>
           {isFavorite ?
               <MdStar onClick={unFavoriteAction}/> :

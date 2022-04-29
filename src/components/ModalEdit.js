@@ -1,11 +1,12 @@
 import './ModalEdit.css';
-import {useEffect, useRef, useState} from 'react';
+import {useContext, useRef} from 'react';
 import {useMutation} from '@apollo/client';
 import {update95, update98, updateDiesel} from '../utils/queries';
+import {MainContext} from '../context/MainContext';
 
 const ModalEdit = ({prices, item, isOpen, setIsOpen, setLoading, loading}) => {
+  const {setUpdateInfo} = useContext(MainContext);
   const form = useRef();
-
   const [doUpdate95] = useMutation(update95);
   const [doUpdate98] = useMutation(update98);
   const [doUpdateDiesel] = useMutation(updateDiesel);
@@ -39,31 +40,33 @@ const ModalEdit = ({prices, item, isOpen, setIsOpen, setLoading, loading}) => {
         console.error('Diesel error');
       }
     }
+    setUpdateInfo(true);
     setLoading(false);
-    setIsOpen(false)
+    setIsOpen(false);
   };
-
-  useEffect(() => {
-    console.log("prices edit", prices)
-  }, [prices])
 
   return (
       <form ref={form} className="edit-form">
         <label>
           Enter new 95 price
           <input name="p95" type="text"
-                 placeholder={prices.fuel95.price ? prices.fuel95.price : 'Enter new price'}/>
+                 placeholder={prices.fuel95.price ?
+                     prices.fuel95.price :
+                     'Enter new price'}/>
         </label><br/>
         <label>
           Enter new 98 price
           <input name="p98" type="text"
-                 placeholder={prices.fuel98.price ? prices.fuel98.price : 'Enter new price'}/>
+                 placeholder={prices.fuel98.price ?
+                     prices.fuel98.price :
+                     'Enter new price'}/>
         </label><br/>
         <label>
           Enter new Diesel price
-          <input name="pDiesel" type="text" placeholder={prices.fuelDiesel.price ?
-              prices.fuelDiesel.price :
-              'Enter new price'}/>
+          <input name="pDiesel" type="text"
+                 placeholder={prices.fuelDiesel.price ?
+                     prices.fuelDiesel.price :
+                     'Enter new price'}/>
         </label><br/>
         <input disabled={loading} type="submit" value="Update"
                onClick={doUpdate}/>

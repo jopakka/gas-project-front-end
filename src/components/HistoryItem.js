@@ -1,4 +1,4 @@
-import "./HistoryItem.css"
+import './HistoryItem.css';
 
 const HistoryItem = ({item}) => {
   return (
@@ -8,7 +8,7 @@ const HistoryItem = ({item}) => {
         <p><b>Type:</b> {item.type}</p>
         <p><b>Updated at:</b> {item.updatedAt}</p>
       </div>
-  )
-}
+  );
+};
 
-export default HistoryItem
+export default HistoryItem;

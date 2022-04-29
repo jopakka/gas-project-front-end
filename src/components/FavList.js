@@ -49,15 +49,15 @@ const FavList = ({item, refetch}) => {
 
   useEffect(() => {
     const listener95 = (args) => {
-      if(item.prices.fuel95) item.prices.fuel95.price = args;
+      if (item.prices.fuel95) item.prices.fuel95.price = args;
       setPrice95(args);
     };
     const listener98 = (args) => {
-      if(item.prices.fuel98) item.prices.fuel98.price = args;
+      if (item.prices.fuel98) item.prices.fuel98.price = args;
       setPrice98(args);
     };
     const listenerDiesel = (args) => {
-      if(item.prices.fuelDiesel) item.prices.fuelDiesel.price = args;
+      if (item.prices.fuelDiesel) item.prices.fuelDiesel.price = args;
       setPriceDiesel(args);
     };
 
@@ -80,8 +80,8 @@ const FavList = ({item, refetch}) => {
   };
 
   useEffect(() => {
-    console.log("id", item.stationID)
-  }, [item])
+    console.log('id', item.stationID);
+  }, [item]);
 
   return (
       <div className="fav-list" onClick={doShowInfo}>
