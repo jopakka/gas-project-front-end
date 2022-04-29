@@ -39,7 +39,8 @@ root.render(
     <React.StrictMode>
       <ApolloProvider client={client}>
         <MainProvider>
-          <BrowserRouter basename={basename}>
+          <BrowserRouter
+              basename={process.env.NODE_ENV === 'production' ? basename : ''}>
             <App/>
           </BrowserRouter>
         </MainProvider>
