@@ -79,6 +79,10 @@ const FavList = ({item, refetch}) => {
     setInfoVisible(true);
   };
 
+  useEffect(() => {
+    console.log("id", item.stationID)
+  }, [item])
+
   return (
       <div className="fav-list" onClick={doShowInfo}>
         <FavListItem title="Name" value={item.properties.name ?? 'no name'}/>

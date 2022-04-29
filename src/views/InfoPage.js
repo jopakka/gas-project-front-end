@@ -1,11 +1,13 @@
 import Modal from 'react-modal';
-import {useEffect, useState} from 'react';
+import {useContext, useEffect, useReducer, useState} from 'react';
 import {useLazyQuery} from '@apollo/client';
 import {stationInfo} from '../utils/queries';
 import PopupTopbar from '../components/PopupTopbar';
 import LoadingIndicator from '../components/LoadingIndicator';
 import ModalInfo from '../components/ModalInfo';
 import ModalEdit from '../components/ModalEdit';
+import {useLocation} from 'react-router-dom';
+import {MainContext} from '../context/MainContext';
 
 const modalStyles = {
   overlay: {
@@ -26,14 +28,54 @@ const modalStyles = {
 };
 
 const InfoPage = ({setVisible, item, isOpen}) => {
+  const {setRefresh, socket} = useContext(MainContext);
+  const location = useLocation();
   const [info, setInfo] = useState(undefined);
   const [loading, setLoading] = useState(false);
   const [editIsOpen, setEditIsOpen] = useState(false);
-  const [getInfo] = useLazyQuery(stationInfo, {
+  const [isFavorite, setIsFavorite] = useState(false);
+
+  const init = () => ({fuel95: {}, fuel98: {}, fuelDiesel: {}});
+  const reducer = (state, action) => {
+    switch (action.type) {
+      case '95':
+        return ({
+          ...state,
+          fuel95: action.payload,
+        });
+      case '98':
+        return ({
+          ...state,
+          fuel98: action.payload,
+        });
+      case 'diesel':
+        return ({
+          ...state,
+          fuelDiesel: action.payload,
+        });
+      case 'reset':
+        return(init)
+      default:
+        break;
+    }
+  };
+  const [prices, setPrices] = useReducer(reducer, {}, init);
+  const [getInfo, {data}] = useLazyQuery(stationInfo, {
     variables: {stationId: item.id || item.stationID},
     onCompleted: (d) => {
       setLoading(false);
+      const p = d.station.prices;
+      if(p.fuel95) {
+        setPrices({type: "95", payload: p.fuel95})
+      }
+      if(p.fuel98) {
+        setPrices({type: "98", payload: p.fuel98})
+      }
+      if(p.fuelDiesel) {
+        setPrices({type: "diesel", payload: p.fuelDiesel})
+      }
       setInfo(d.station);
+      if (d.favorite) setIsFavorite(true);
     },
     onError: () => {
       setLoading(false);
@@ -41,8 +83,15 @@ const InfoPage = ({setVisible, item, isOpen}) => {
   });
 
   const closeForm = () => {
+    if (location.pathname === '/favorites') {
+      if (data.favorite && !isFavorite) {
+        setRefresh(true);
+      }
+    }
+
     setVisible(false);
     setInfo(undefined);
+    setPrices({type: "reset"})
   };
 
   useEffect(() => {
@@ -51,19 +100,44 @@ const InfoPage = ({setVisible, item, isOpen}) => {
     getInfo();
   }, [getInfo, isOpen]);
 
+  useEffect(() => {
+    const listener95 = (args) => {
+      setPrices({type: '95', payload: args});
+    };
+    const listener98 = (args) => {
+      setPrices({type: '98', payload: args});
+    };
+    const listenerDiesel = (args) => {
+      setPrices({type: 'diesel', payload: args});
+    };
+
+    const channel95 = `price ${item.stationID} 95`;
+    const channel98 = `price ${item.stationID} 98`;
+    const channelDiesel = `price ${item.stationID} diesel`;
+    socket.on(channel95, listener95);
+    socket.on(channel98, listener98);
+    socket.on(channelDiesel, listenerDiesel);
+    return () => {
+      socket.off(channel95, listener95);
+      socket.off(channel98, listener98);
+      socket.off(channelDiesel, listenerDiesel);
+    };
+  }, [item, socket]);
+
   return (
       <Modal ariaHideApp={false} style={modalStyles} isOpen={true}
              parentSelector={() => document.querySelector('.App')}>
-        <PopupTopbar setEditOpen={setEditIsOpen} station={item}
+        <PopupTopbar isFavorite={isFavorite} setIsFavorite={setIsFavorite}
+                     setEditOpen={setEditIsOpen} editIsOpen={editIsOpen} station={item}
                      closeAction={closeForm}/>
         {loading && <LoadingIndicator/>}
         {info && <div style={{margin: 20}}>
           <h2>{info.properties.name}</h2><br/>
           {editIsOpen ?
-              <ModalEdit loading={loading} setLoading={setLoading}
+              <ModalEdit prices={prices} loading={loading} setLoading={setLoading}
                          isOpen={editIsOpen} setIsOpen={setEditIsOpen}
                          item={info}/> :
-              <ModalInfo info={info}/>}
+              <ModalInfo prices={prices} info={info}/>}
         </div>}
       </Modal>
   );

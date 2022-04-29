@@ -3,36 +3,12 @@ import {useEffect, useRef, useState} from 'react';
 import {useMutation} from '@apollo/client';
 import {update95, update98, updateDiesel} from '../utils/queries';
 
-const ModalEdit = ({item, isOpen, setIsOpen, setLoading, loading}) => {
-  const [price95, setPrice95] = useState(undefined);
-  const [price98, setPrice98] = useState(undefined);
-  const [priceDiesel, setPriceDiesel] = useState(undefined);
+const ModalEdit = ({prices, item, isOpen, setIsOpen, setLoading, loading}) => {
   const form = useRef();
 
   const [doUpdate95] = useMutation(update95);
   const [doUpdate98] = useMutation(update98);
   const [doUpdateDiesel] = useMutation(updateDiesel);
-
-  useEffect(() => {
-    if (item && isOpen) {
-      const f95 = item.prices.fuel95;
-      const f98 = item.prices.fuel98;
-      const fDiesel = item.prices.fuelDiesel;
-      if (f95) {
-        setPrice95(f95);
-      }
-      if (f98) {
-        setPrice98(f98);
-      }
-      if (fDiesel) {
-        setPriceDiesel(fDiesel);
-      }
-    } else {
-      setPrice95(undefined);
-      setPrice98(undefined);
-      setPriceDiesel(undefined);
-    }
-  }, [isOpen, item]);
 
   const doUpdate = async (e) => {
     e.preventDefault();
@@ -67,22 +43,26 @@ const ModalEdit = ({item, isOpen, setIsOpen, setLoading, loading}) => {
     setIsOpen(false)
   };
 
+  useEffect(() => {
+    console.log("prices edit", prices)
+  }, [prices])
+
   return (
       <form ref={form} className="edit-form">
         <label>
           Enter new 95 price
           <input name="p95" type="text"
-                 placeholder={price95 ? price95.price : 'Enter new price'}/>
+                 placeholder={prices.fuel95.price ? prices.fuel95.price : 'Enter new price'}/>
         </label><br/>
         <label>
           Enter new 98 price
           <input name="p98" type="text"
-                 placeholder={price98 ? price98.price : 'Enter new price'}/>
+                 placeholder={prices.fuel98.price ? prices.fuel98.price : 'Enter new price'}/>
         </label><br/>
         <label>
           Enter new Diesel price
-          <input name="pDiesel" type="text" placeholder={priceDiesel ?
-              priceDiesel.price :
+          <input name="pDiesel" type="text" placeholder={prices.fuelDiesel.price ?
+              prices.fuelDiesel.price :
               'Enter new price'}/>
         </label><br/>
         <input disabled={loading} type="submit" value="Update"

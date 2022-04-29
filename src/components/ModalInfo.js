@@ -1,4 +1,4 @@
-const ModalInfo = ({info}) => {
+const ModalInfo = ({info, prices}) => {
   return (
       <>
         <div style={{textAlign: 'start'}}>
@@ -12,14 +12,14 @@ const ModalInfo = ({info}) => {
         <div style={{textAlign: 'start'}}>
           <h3>Prices</h3>
           <p>
-            <b>95:</b> {info.prices.fuel95 ?
-              info.prices.fuel95.price + ' €/L' :
+            <b>95:</b> {prices.fuel95.price ?
+              prices.fuel95.price + ' €/L' :
               'no price'}<br/>
-            <b>98:</b> {info.prices.fuel98 ?
-              info.prices.fuel98.price + ' €/L' :
+            <b>98:</b> {prices.fuel98.price ?
+              prices.fuel98.price + ' €/L' :
               'no price'}<br/>
-            <b>Diesel:</b> {info.prices.fuelDiesel ?
-              info.prices.fuelDiesel.price + ' €/L' :
+            <b>Diesel:</b> {prices.fuelDiesel.price ?
+              prices.fuelDiesel.price + ' €/L' :
               'no price'}<br/>
           </p>
         </div>

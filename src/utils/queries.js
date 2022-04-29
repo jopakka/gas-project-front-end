@@ -67,6 +67,9 @@ query Station($stationId: String!) {
       }
     }
   }
+  favorite(stationID: $stationId) {
+    stationID
+  }
 }
 `;
 

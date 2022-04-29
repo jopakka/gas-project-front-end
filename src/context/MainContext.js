@@ -8,6 +8,7 @@ const MainProvider = ({children}) => {
   const [socket, setSocket] = useState(undefined);
   const [infoVisible, setInfoVisible] = useState(false);
   const [infoItem, setInfoItem] = useState(undefined);
+  const [refresh, setRefresh] = useState(false);
 
   useEffect(() => {
     const u = localStorage.getItem('username');
@@ -21,16 +22,12 @@ const MainProvider = ({children}) => {
   return (
       <MainContext.Provider
           value={{
-            isLoggedIn,
-            setIsLoggedIn,
-            user,
-            setUser,
-            socket,
-            setSocket,
-            infoVisible,
-            setInfoVisible,
-            infoItem,
-            setInfoItem,
+            isLoggedIn, setIsLoggedIn,
+            user, setUser,
+            socket, setSocket,
+            infoVisible, setInfoVisible,
+            infoItem, setInfoItem,
+            refresh, setRefresh,
           }}
       >
         {children}

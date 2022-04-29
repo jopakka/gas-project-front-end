@@ -2,32 +2,30 @@ import './PopupTopbar.css';
 import {MdClose, MdMode, MdStar, MdStarBorder} from 'react-icons/md';
 import {useContext} from 'react';
 import {MainContext} from '../context/MainContext';
-import {useMutation, useQuery} from '@apollo/client';
-import {addFavorite, checkFavorite, deleteFavorite} from '../utils/queries';
-import {useState} from 'react';
+import {useMutation} from '@apollo/client';
+import {addFavorite, deleteFavorite} from '../utils/queries';
 
-const PopupTopbar = ({station, closeAction, setEditOpen, editIsOpen}) => {
+const PopupTopbar = ({
+                       station,
+                       closeAction,
+                       setEditOpen,
+                       editIsOpen,
+                       isFavorite,
+                       setIsFavorite,
+                     }) => {
   const {user} = useContext(MainContext);
-  const [favorite, setFavorite] = useState(false);
-  useQuery(checkFavorite, {
-    variables: {stationId: station.id || station.stationID},
-    onCompleted: (d) => {
-      console.log("d", d)
-      if(d.favorite) setFavorite(true)
-    }
-  })
   const [doAddFavorite] = useMutation(addFavorite, {
     onCompleted: (d) => {
       console.log('add', d);
       if (!d.addFavorite) return;
-      setFavorite(true);
+      setIsFavorite(true);
     },
   });
   const [doDeleteFavorite] = useMutation(deleteFavorite, {
     onCompleted: (d) => {
       console.log('delete', d);
       if (!d.deleteFavorite) return;
-      setFavorite(false);
+      setIsFavorite(false);
     },
   });
 
@@ -40,11 +38,12 @@ const PopupTopbar = ({station, closeAction, setEditOpen, editIsOpen}) => {
     await doDeleteFavorite(
         {variables: {stationId: station.id || station.stationID}});
   };
+
   return (
-      <div className={user ? "popup-topbar" : "popup-topbar end"}>
-        {user && <button onClick={() => setEditOpen(true)}><MdMode/></button>}
+      <div className={user ? 'popup-topbar' : 'popup-topbar end'}>
+        {user && <button onClick={() => setEditOpen(!editIsOpen)}><MdMode/></button>}
         {user && <button>
-          {favorite ?
+          {isFavorite ?
               <MdStar onClick={unFavoriteAction}/> :
               <MdStarBorder onClick={favoriteAction}/>
           }
