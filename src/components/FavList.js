@@ -15,7 +15,6 @@ const FavList = ({item, refetch}) => {
       stationId: item.stationID,
     },
     onCompleted: (d) => {
-      console.log('delete', d);
       if (!d.deleteFavorite) return;
       refetch();
     },
@@ -26,7 +25,6 @@ const FavList = ({item, refetch}) => {
 
   const askDelete = async (e) => {
     e.stopPropagation();
-    console.log(item);
     if (window.confirm('Do you want to delete this station from favorites?')) {
       await doDeleteFavorite();
     }
@@ -61,9 +59,9 @@ const FavList = ({item, refetch}) => {
       setPriceDiesel(args);
     };
 
-    const channel95 = `price ${item.stationID} 95`;
-    const channel98 = `price ${item.stationID} 98`;
-    const channelDiesel = `price ${item.stationID} diesel`;
+    const channel95 = `price ${item.id || item.stationID} 95`;
+    const channel98 = `price ${item.id || item.stationID} 98`;
+    const channelDiesel = `price ${item.id || item.stationID} diesel`;
     socket.on(channel95, listener95);
     socket.on(channel98, listener98);
     socket.on(channelDiesel, listenerDiesel);
@@ -78,10 +76,6 @@ const FavList = ({item, refetch}) => {
     setInfoItem(item);
     setInfoVisible(true);
   };
-
-  useEffect(() => {
-    console.log('id', item.stationID);
-  }, [item]);
 
   return (
       <div className="fav-list" onClick={doShowInfo}>

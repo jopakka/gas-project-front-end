@@ -24,7 +24,7 @@ const Favorites = (callback, deps) => {
           setLoading(true);
           await refetch();
         } catch (e) {
-          
+
         }
       }, [refetch],
   );

@@ -16,14 +16,12 @@ const PopupTopbar = ({
   const {user} = useContext(MainContext);
   const [doAddFavorite] = useMutation(addFavorite, {
     onCompleted: (d) => {
-      console.log('add', d);
       if (!d.addFavorite) return;
       setIsFavorite(true);
     },
   });
   const [doDeleteFavorite] = useMutation(deleteFavorite, {
     onCompleted: (d) => {
-      console.log('delete', d);
       if (!d.deleteFavorite) return;
       setIsFavorite(false);
     },

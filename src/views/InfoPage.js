@@ -98,10 +98,12 @@ const InfoPage = ({setVisible, item, isOpen}) => {
   };
 
   useEffect(() => {
-    if (!isOpen) return;
-    setLoading(true);
-    getInfo({variables: {stationId: item.id || item.stationID}});
-    setUpdateInfo(false);
+    (async () => {
+      if (!isOpen) return;
+      setLoading(true);
+      setUpdateInfo(false);
+      await getInfo({variables: {stationId: item.id || item.stationID}});
+    })();
   }, [getInfo, isOpen, item, setUpdateInfo, updateInfo]);
 
   useEffect(() => {
@@ -116,9 +118,9 @@ const InfoPage = ({setVisible, item, isOpen}) => {
       setPrices({type: 'diesel', payload: args});
     };
 
-    const channel95 = `price ${item.stationID} 95`;
-    const channel98 = `price ${item.stationID} 98`;
-    const channelDiesel = `price ${item.stationID} diesel`;
+    const channel95 = `price ${item.id || item.stationID} 95`;
+    const channel98 = `price ${item.id || item.stationID} 98`;
+    const channelDiesel = `price ${item.id || item.stationID} diesel`;
     socket.on(channel95, listener95);
     socket.on(channel98, listener98);
     socket.on(channelDiesel, listenerDiesel);
@@ -142,7 +144,7 @@ const InfoPage = ({setVisible, item, isOpen}) => {
           {editIsOpen ?
               <ModalEdit prices={prices} loading={loading}
                          setLoading={setLoading}
-                         isOpen={editIsOpen} setIsOpen={setEditIsOpen}
+                         setIsOpen={setEditIsOpen}
                          item={info}/> :
               <ModalInfo prices={prices} info={info}/>}
         </div>}

@@ -32,11 +32,9 @@ const DisplayStations = ({map}) => {
   const [getStations, {data}] = useLazyQuery(stationsByBounds, {
     fetchPolicy: 'network-only',
     onCompleted: () => {
-      console.log('oncomplete');
       setLoading(false);
     },
     onError: () => {
-      console.log('onerror');
       setLoading(false);
     },
   });
@@ -49,17 +47,12 @@ const DisplayStations = ({map}) => {
         setLoading(true);
         await getStations({variables: {bounds: mapBounds(map.getBounds())}});
       } catch (e) {
-        setLoading(false)
-        console.log('moveEnd', e);
+        setLoading(false);
       }
     })();
   }, [getStations, map]);
 
   useEffect(moveEnd, [moveEnd, map]);
-
-  useEffect(() => {
-    console.log("loading", loading)
-  }, [loading])
 
   useEffect(() => {
     map.on('moveend', moveEnd);

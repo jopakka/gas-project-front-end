@@ -1,11 +1,9 @@
 import './ModalEdit.css';
-import {useContext, useRef} from 'react';
+import {useRef} from 'react';
 import {useMutation} from '@apollo/client';
 import {update95, update98, updateDiesel} from '../utils/queries';
-import {MainContext} from '../context/MainContext';
 
-const ModalEdit = ({prices, item, isOpen, setIsOpen, setLoading, loading}) => {
-  const {setUpdateInfo} = useContext(MainContext);
+const ModalEdit = ({prices, item, setIsOpen, setLoading, loading}) => {
   const form = useRef();
   const [doUpdate95] = useMutation(update95);
   const [doUpdate98] = useMutation(update98);
@@ -40,7 +38,6 @@ const ModalEdit = ({prices, item, isOpen, setIsOpen, setLoading, loading}) => {
         console.error('Diesel error');
       }
     }
-    setUpdateInfo(true);
     setLoading(false);
     setIsOpen(false);
   };

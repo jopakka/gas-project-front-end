@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import {useState} from 'react';
 import {useQuery} from '@apollo/client';
 import {userInfo} from '../utils/queries';
 import LoadingIndicator from '../components/LoadingIndicator';
@@ -20,17 +20,16 @@ const Profile = () => {
     onError: () => setLoading(false),
   });
 
-  useEffect(() => {
-    console.log('userData', userData);
-  }, [userData]);
-
   return (
       <>
         {loading && <LoadingIndicator/>}
         <h1>Hello {userData.user.username}</h1>
         <h2>History</h2>
-        {userData.history.length > 0 ? userData.history.map(
-            h => <HistoryItem key={indexOf(userData.history, h)} item={h}/>) : <p>No items</p>}
+        {userData.history.length > 0 ?
+            userData.history.map(
+                h => <HistoryItem key={indexOf(userData.history, h)}
+                                  item={h}/>) :
+            <p>No items</p>}
       </>
   );
 };

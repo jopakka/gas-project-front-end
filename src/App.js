@@ -2,7 +2,7 @@ import './App.css';
 import TopBar from './components/TopBar';
 import {useContext, useEffect, useState} from 'react';
 import {MainContext} from './context/MainContext';
-import io from 'socket.io-client';
+import {io} from 'socket.io-client';
 import {apiUrl} from './utils/variables';
 import Favorites from './views/Favorites';
 import {Navigate, Route, Routes, useLocation} from 'react-router-dom';
@@ -33,7 +33,13 @@ const App = () => {
 
   useEffect(() => {
     const newSocket = io(apiUrl);
-    if (newSocket) setSocket(newSocket);
+    newSocket.on('connect', () => {
+      console.log('Socket connected', newSocket);
+    });
+    setSocket(newSocket);
+    return () => {
+      newSocket.close();
+    };
   }, [setSocket]);
 
   const loginLinks = [
@@ -73,7 +79,8 @@ const App = () => {
   return (
       <div className="App">
         <LoginRegister isVisible={loginVisible} setVisible={setLoginVisible}/>
-        <InfoPage item={infoItem} isOpen={infoVisible} setVisible={setInfoVisible}/>
+        <InfoPage item={infoItem} isOpen={infoVisible}
+                  setVisible={setInfoVisible}/>
         <div style={{flexGrow: 1, height: '100%', display: 'flex'}}>
           <div style={{flex: 1}}>
             <TopBar profileLinks={!isLoggedIn ? loginLinks : loggedInLinks}/>
