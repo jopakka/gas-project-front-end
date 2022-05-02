@@ -28,7 +28,8 @@ const modalStyles = {
 };
 
 const InfoPage = ({setVisible, item, isOpen}) => {
-  const {setRefresh, socket, updateInfo, setUpdateInfo} = useContext(MainContext);
+  const {setRefresh, socket, updateInfo, setUpdateInfo} = useContext(
+      MainContext);
   const location = useLocation();
   const [info, setInfo] = useState(undefined);
   const [loading, setLoading] = useState(false);
@@ -54,25 +55,25 @@ const InfoPage = ({setVisible, item, isOpen}) => {
           fuelDiesel: action.payload,
         });
       case 'reset':
-        return(init)
+        return (init);
       default:
         break;
     }
   };
   const [prices, setPrices] = useReducer(reducer, {}, init);
   const [getInfo, {data}] = useLazyQuery(stationInfo, {
-    variables: {stationId: item.id || item.stationID},
     onCompleted: (d) => {
       setLoading(false);
+      if (!d.station) return;
       const p = d.station.prices;
-      if(p.fuel95) {
-        setPrices({type: "95", payload: p.fuel95})
+      if (p.fuel95) {
+        setPrices({type: '95', payload: p.fuel95});
       }
-      if(p.fuel98) {
-        setPrices({type: "98", payload: p.fuel98})
+      if (p.fuel98) {
+        setPrices({type: '98', payload: p.fuel98});
       }
-      if(p.fuelDiesel) {
-        setPrices({type: "diesel", payload: p.fuelDiesel})
+      if (p.fuelDiesel) {
+        setPrices({type: 'diesel', payload: p.fuelDiesel});
       }
       setInfo(d.station);
       if (d.favorite) setIsFavorite(true);
@@ -90,18 +91,20 @@ const InfoPage = ({setVisible, item, isOpen}) => {
     }
 
     setVisible(false);
+    setIsFavorite(false);
     setInfo(undefined);
-    setPrices({type: "reset"})
+    setPrices({type: 'reset'});
   };
 
   useEffect(() => {
     if (!isOpen) return;
     setLoading(true);
-    getInfo();
+    getInfo({variables: {stationId: item.id || item.stationID}});
     setUpdateInfo(false);
-  }, [getInfo, isOpen, setUpdateInfo, updateInfo]);
+  }, [getInfo, isOpen, item, setUpdateInfo, updateInfo]);
 
   useEffect(() => {
+    if (!isOpen) return;
     const listener95 = (args) => {
       setPrices({type: '95', payload: args});
     };
@@ -123,19 +126,21 @@ const InfoPage = ({setVisible, item, isOpen}) => {
       socket.off(channel98, listener98);
       socket.off(channelDiesel, listenerDiesel);
     };
-  }, [item, socket]);
+  }, [isOpen, item, socket]);
 
   return (
-      <Modal ariaHideApp={false} style={modalStyles} isOpen={true}
+      <Modal ariaHideApp={false} style={modalStyles} isOpen={isOpen}
              parentSelector={() => document.querySelector('.App')}>
         <PopupTopbar isFavorite={isFavorite} setIsFavorite={setIsFavorite}
-                     setEditOpen={setEditIsOpen} editIsOpen={editIsOpen} station={item}
+                     setEditOpen={setEditIsOpen} editIsOpen={editIsOpen}
+                     station={item}
                      closeAction={closeForm}/>
         {loading && <LoadingIndicator/>}
         {info && <div style={{margin: 20}}>
           <h2>{info.properties.name}</h2><br/>
           {editIsOpen ?
-              <ModalEdit prices={prices} loading={loading} setLoading={setLoading}
+              <ModalEdit prices={prices} loading={loading}
+                         setLoading={setLoading}
                          isOpen={editIsOpen} setIsOpen={setEditIsOpen}
                          item={info}/> :
               <ModalInfo prices={prices} info={info}/>}

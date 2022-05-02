@@ -72,9 +72,8 @@ const App = () => {
 
   return (
       <div className="App">
-        {loginVisible && <LoginRegister setVisible={setLoginVisible}/>}
-        {infoVisible && <InfoPage item={infoItem} isOpen={infoVisible}
-                                  setVisible={setInfoVisible}/>}
+        <LoginRegister isVisible={loginVisible} setVisible={setLoginVisible}/>
+        <InfoPage item={infoItem} isOpen={infoVisible} setVisible={setInfoVisible}/>
         <div style={{flexGrow: 1, height: '100%', display: 'flex'}}>
           <div style={{flex: 1}}>
             <TopBar profileLinks={!isLoggedIn ? loginLinks : loggedInLinks}/>

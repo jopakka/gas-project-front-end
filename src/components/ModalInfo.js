@@ -12,13 +12,13 @@ const ModalInfo = ({info, prices}) => {
         <div style={{textAlign: 'start'}}>
           <h3>Prices</h3>
           <p>
-            <b>95:</b> {prices.fuel95.price ?
+            <b>95:</b> {prices.fuel95 && prices.fuel95.price ?
               prices.fuel95.price + ' €/L' :
               'no price'}<br/>
-            <b>98:</b> {prices.fuel98.price ?
+            <b>98:</b> {prices.fuel98 && prices.fuel98.price ?
               prices.fuel98.price + ' €/L' :
               'no price'}<br/>
-            <b>Diesel:</b> {prices.fuelDiesel.price ?
+            <b>Diesel:</b> {prices.fuelDiesel && prices.fuelDiesel.price ?
               prices.fuelDiesel.price + ' €/L' :
               'no price'}<br/>
           </p>

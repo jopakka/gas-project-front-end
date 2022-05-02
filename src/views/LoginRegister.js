@@ -21,7 +21,7 @@ const modalStyles = {
   },
 };
 
-const LoginRegister = ({setVisible}) => {
+const LoginRegister = ({setVisible, isVisible}) => {
   const [loginMode, setLoginMode] = useState(true);
 
   const closeForm = () => {
@@ -36,7 +36,7 @@ const LoginRegister = ({setVisible}) => {
   };
 
   return (
-      <Modal ariaHideApp={false} style={modalStyles} isOpen={true}
+      <Modal isOpen={isVisible} ariaHideApp={false} style={modalStyles}
              parentSelector={() => document.querySelector('.App')}>
         <div className="cancel" onClick={closeForm}></div>
         {loginMode ?
