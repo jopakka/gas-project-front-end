@@ -92,6 +92,7 @@ const InfoPage = ({setVisible, item, isOpen}) => {
 
     setVisible(false);
     setIsFavorite(false);
+    setEditIsOpen(false);
     setInfo(undefined);
     setPrices({type: 'reset'});
   };

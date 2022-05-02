@@ -50,21 +50,21 @@ const ModalEdit = ({prices, item, isOpen, setIsOpen, setLoading, loading}) => {
         <label>
           Enter new 95 price
           <input name="p95" type="text"
-                 placeholder={prices.fuel95.price ?
+                 placeholder={prices.fuel95 && prices.fuel95.price ?
                      prices.fuel95.price :
                      'Enter new price'}/>
         </label><br/>
         <label>
           Enter new 98 price
           <input name="p98" type="text"
-                 placeholder={prices.fuel98.price ?
+                 placeholder={prices.fuel98 && prices.fuel98.price ?
                      prices.fuel98.price :
                      'Enter new price'}/>
         </label><br/>
         <label>
           Enter new Diesel price
           <input name="pDiesel" type="text"
-                 placeholder={prices.fuelDiesel.price ?
+                 placeholder={prices.fuelDiesel && prices.fuelDiesel.price ?
                      prices.fuelDiesel.price :
                      'Enter new price'}/>
         </label><br/>
