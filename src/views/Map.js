@@ -67,9 +67,9 @@ const DisplayStations = ({map}) => {
 
   const displayStations = useMemo(() => (
       <>
-        {stations.map(s => (
-            <StationMarker key={indexOf(stations, s)} station={s}/>
-        ))}
+        {stations.flatMap(s => s !== null ?
+            <StationMarker key={indexOf(stations, s)} station={s}/> :
+            [])}
       </>
   ), [stations]);
 
