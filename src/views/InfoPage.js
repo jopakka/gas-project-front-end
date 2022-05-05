@@ -61,27 +61,8 @@ const InfoPage = ({setVisible, item, isOpen}) => {
     }
   };
   const [prices, setPrices] = useReducer(reducer, {}, init);
-  const [getInfo, {data}] = useLazyQuery(stationInfo, {
+  let [getInfo, {data}] = useLazyQuery(stationInfo, {
     fetchPolicy: 'network-only',
-    onCompleted: (d) => {
-      setLoading(false);
-      if (!d.station) return;
-      const p = d.station.prices;
-      if (p.fuel95) {
-        setPrices({type: '95', payload: p.fuel95});
-      }
-      if (p.fuel98) {
-        setPrices({type: '98', payload: p.fuel98});
-      }
-      if (p.fuelDiesel) {
-        setPrices({type: 'diesel', payload: p.fuelDiesel});
-      }
-      setInfo(d.station);
-      if (d.favorite) setIsFavorite(true);
-    },
-    onError: () => {
-      setLoading(false);
-    },
   });
 
   const closeForm = () => {
@@ -104,9 +85,25 @@ const InfoPage = ({setVisible, item, isOpen}) => {
       setLoading(true);
       setUpdateInfo(false);
       try {
-        await getInfo({variables: {stationId: item.id || item.stationID}});
+        const response = await getInfo(
+            {variables: {stationId: item.id || item.stationID}});
+        console.log('info ready', response);
+        setLoading(false);
+        if (!response.data.station) return;
+        const p = response.data.station.prices;
+        if (p.fuel95) {
+          setPrices({type: '95', payload: p.fuel95});
+        }
+        if (p.fuel98) {
+          setPrices({type: '98', payload: p.fuel98});
+        }
+        if (p.fuelDiesel) {
+          setPrices({type: 'diesel', payload: p.fuelDiesel});
+        }
+        setInfo(response.data.station);
+        if (response.data.favorite) setIsFavorite(true);
       } catch (e) {
-
+        setLoading(false);
       }
     })();
   }, [getInfo, isOpen, item, setUpdateInfo, updateInfo]);
