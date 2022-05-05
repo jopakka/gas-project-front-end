@@ -1,2 +1,2 @@
 # Gas App front-end
-Made with React JS.
+Made with React JS. Project is made for Metropolia's SSSF course project.
