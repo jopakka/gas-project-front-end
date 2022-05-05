@@ -4,30 +4,8 @@ const stationsByBounds = gql`
 query StationsByBounds($bounds: Bounds!) {
   stationsByBounds(bounds: $bounds) {
     id
-    properties {
-      brand
-      name
-      operator
-    }
-    prices {
-      fuel95 {
-        stationID
-        price
-        updatedAt
-      }
-      fuel98 {
-        stationID
-        price
-        updatedAt
-      }
-      fuelDiesel {
-        stationID
-        price
-        updatedAt
-      }
-    }
     geometry {
-        coordinates
+      coordinates
     }
   }
 }
@@ -54,14 +32,20 @@ query Station($stationId: String!) {
     }
     prices {
       fuel95 {
+        historyID
+        rating
         price
         updatedAt
       }
       fuel98 {
+        historyID
+        rating
         price
         updatedAt
       }
       fuelDiesel {
+        historyID
+        rating
         price
         updatedAt
       }
@@ -182,6 +166,15 @@ query User($userId: ID) {
 }
 `;
 
+const addRating = gql`
+mutation AddRating($historyId: ID!, $rating: Int!) {
+  addRating(historyID: $historyId, rating: $rating) {
+    historyID
+    rating
+  }
+}
+`;
+
 export {
   stationsByBounds,
   login,
@@ -195,4 +188,5 @@ export {
   update98,
   updateDiesel,
   userInfo,
+  addRating,
 };

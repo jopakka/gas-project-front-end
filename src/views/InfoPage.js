@@ -62,6 +62,7 @@ const InfoPage = ({setVisible, item, isOpen}) => {
   };
   const [prices, setPrices] = useReducer(reducer, {}, init);
   const [getInfo, {data}] = useLazyQuery(stationInfo, {
+    fetchPolicy: 'network-only',
     onCompleted: (d) => {
       setLoading(false);
       if (!d.station) return;
@@ -102,7 +103,11 @@ const InfoPage = ({setVisible, item, isOpen}) => {
       if (!isOpen) return;
       setLoading(true);
       setUpdateInfo(false);
-      await getInfo({variables: {stationId: item.id || item.stationID}});
+      try {
+        await getInfo({variables: {stationId: item.id || item.stationID}});
+      } catch (e) {
+
+      }
     })();
   }, [getInfo, isOpen, item, setUpdateInfo, updateInfo]);
 
@@ -146,7 +151,7 @@ const InfoPage = ({setVisible, item, isOpen}) => {
                          setLoading={setLoading}
                          setIsOpen={setEditIsOpen}
                          item={info}/> :
-              <ModalInfo prices={prices} info={info}/>}
+              <ModalInfo isOpen={!editIsOpen} prices={prices} info={info}/>}
         </div>}
       </Modal>
   );

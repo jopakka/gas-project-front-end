@@ -1,0 +1,7 @@
+.thumb {
+    border-radius: 50%;
+}
+
+.thumb:hover {
+    background-color: #999999;
+}
